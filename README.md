@@ -1,5 +1,13 @@
 # shopify-theme-builder
 
+<p>
+  <a href="https://github.com/moVictor99/shopify-theme-builder/stargazers"><img src="https://img.shields.io/github/stars/moVictor99/shopify-theme-builder?style=flat&color=8a6d3b" alt="Stars"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/moVictor99/shopify-theme-builder?color=informational" alt="License: MIT"></a>
+  <img src="https://img.shields.io/badge/Online%20Store-2.0-96BF48?logo=shopify&logoColor=white" alt="Online Store 2.0">
+  <img src="https://img.shields.io/badge/works%20with-Claude%20·%20Codex%20·%20Cursor%20·%20Windsurf-5A45FF" alt="Agents">
+  <a href="https://github.com/moVictor99/shopify-theme-builder/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen" alt="PRs welcome"></a>
+</p>
+
 > An [Anthropic Skill](https://docs.claude.com/en/docs/agents-and-tools/agent-skills/overview)
 > that turns Claude into a senior Shopify theme engineer. It interviews you about
 > your store, then generates a **complete, clean, Online Store 2.0 theme** that a
