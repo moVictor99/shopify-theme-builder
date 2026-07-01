@@ -1,0 +1,13 @@
+# Normalize line endings across platforms so the theme + scripts are portable.
+* text=auto eol=lf
+
+# Windows-only script keeps CRLF
+*.ps1 text eol=crlf
+
+# Shell scripts and theme sources must stay LF
+*.sh   text eol=lf
+*.liquid text eol=lf
+*.json   text eol=lf
+*.css    text eol=lf
+*.js     text eol=lf
+*.md     text eol=lf
