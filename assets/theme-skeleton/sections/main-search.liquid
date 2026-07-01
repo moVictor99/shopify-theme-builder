@@ -1,0 +1,79 @@
+{%- comment -%}
+  main-search.liquid — search form + paginated results.
+{%- endcomment -%}
+<div class="main-search color-{{ section.settings.color_scheme }}">
+  <div class="main-search__inner page-width section">
+    <h1 class="main-search__title">{{ 'sections.search.title' | t }}</h1>
+
+    <form action="{{ routes.search_url }}" method="get" role="search" class="main-search__form">
+      <label class="visually-hidden" for="SearchInput">{{ 'sections.search.label' | t }}</label>
+      <input
+        id="SearchInput"
+        type="search"
+        name="q"
+        value="{{ search.terms | escape }}"
+        placeholder="{{ 'sections.search.placeholder' | t }}"
+        class="main-search__input"
+      >
+      <button type="submit" class="button">{{ 'sections.search.submit' | t }}</button>
+    </form>
+
+    {%- if search.performed -%}
+      {%- if search.results.size > 0 -%}
+        <p class="main-search__count text-secondary">
+          {{ 'sections.search.results_count' | t: count: search.results_count }}
+        </p>
+        {%- paginate search.results by 12 -%}
+          <ul class="main-search__results grid" role="list">
+            {%- for item in search.results -%}
+              <li class="main-search__result">
+                <a href="{{ item.url }}">{{ item.title }}</a>
+              </li>
+            {%- endfor -%}
+          </ul>
+
+          {%- if paginate.pages > 1 -%}
+            <nav class="pagination" aria-label="{{ 'general.pagination.label' | t }}">
+              {%- if paginate.previous -%}
+                <a href="{{ paginate.previous.url }}" class="pagination__link">{{ 'general.pagination.previous' | t }}</a>
+              {%- endif -%}
+              {%- if paginate.next -%}
+                <a href="{{ paginate.next.url }}" class="pagination__link">{{ 'general.pagination.next' | t }}</a>
+              {%- endif -%}
+            </nav>
+          {%- endif -%}
+        {%- endpaginate -%}
+      {%- else -%}
+        <p class="main-search__empty">{{ 'sections.search.no_results' | t: terms: search.terms }}</p>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</div>
+
+{%- style -%}
+  .main-search__form { display: flex; gap: var(--space-3); margin-block: var(--space-6); }
+  .main-search__input {
+    flex: 1;
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid rgb(var(--color-border));
+    border-radius: var(--radius-sm);
+  }
+  .main-search__results { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); list-style: none; padding: 0; }
+  .pagination { display: flex; gap: var(--space-4); justify-content: center; margin-block-start: var(--space-8); }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Search",
+  "tag": "section",
+  "class": "main-search-section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

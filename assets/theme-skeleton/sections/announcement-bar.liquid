@@ -1,0 +1,75 @@
+{%- comment -%}
+  announcement-bar.liquid — thin promo bar above the header.
+  Repeatable "message" blocks; each an inline_richtext string with optional link.
+{%- endcomment -%}
+<div class="announcement-bar color-{{ section.settings.color_scheme }}">
+  {%- if section.blocks.size > 0 -%}
+    <div class="announcement-bar__inner page-width">
+      {%- for block in section.blocks -%}
+        <p class="announcement-bar__message" {{ block.shopify_attributes }}>
+          {%- if block.settings.link != blank -%}
+            <a class="announcement-bar__link" href="{{ block.settings.link }}">
+              {{ block.settings.text }}
+            </a>
+          {%- else -%}
+            {{ block.settings.text }}
+          {%- endif -%}
+        </p>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</div>
+
+{%- style -%}
+  .announcement-bar {
+    padding-block: var(--space-2);
+    font-size: var(--font-small);
+    text-align: center;
+  }
+  .announcement-bar__message { margin: 0; }
+  .announcement-bar__link { text-decoration: underline; }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "tag": "aside",
+  "class": "announcement-bar-section",
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "message",
+      "name": "Message",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "Welcome to our store"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement bar",
+      "blocks": [
+        { "type": "message" }
+      ]
+    }
+  ]
+}
+{% endschema %}

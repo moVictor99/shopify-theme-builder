@@ -1,0 +1,106 @@
+{%- comment -%}
+  css-variables.liquid
+  The single bridge between settings_schema.json and the CSS custom properties
+  every section reads. Change a token in the theme editor -> the whole theme
+  restyles. Loaded once from layout/theme.liquid inside <head>.
+
+  Color schemes follow Dawn's color_scheme_group model: each scheme becomes a
+  .color-<id> class exposing RGB-triplet vars so sections can apply alpha.
+  Sections opt into a scheme with class="color-{{ section.settings.color_scheme }}".
+{%- endcomment -%}
+{%- liquid
+  assign speed = settings.animation_speed
+  assign dur_base = '0.4s'
+  if speed == 'fast'
+    assign dur_base = '0.25s'
+  elsif speed == 'slow'
+    assign dur_base = '0.6s'
+  endif
+-%}
+{%- style -%}
+  {%- for scheme in settings.color_schemes -%}
+    {%- assign s = scheme.settings -%}
+    .color-{{ scheme.id }} {
+      --color-background: {{ s.background.red }} {{ s.background.green }} {{ s.background.blue }};
+      --color-foreground: {{ s.text.red }} {{ s.text.green }} {{ s.text.blue }};
+      --color-surface: {{ s.surface.red }} {{ s.surface.green }} {{ s.surface.blue }};
+      --color-border: {{ s.border.red }} {{ s.border.green }} {{ s.border.blue }};
+      --color-primary: {{ s.primary_button.red }} {{ s.primary_button.green }} {{ s.primary_button.blue }};
+      --color-on-primary: {{ s.on_primary_button.red }} {{ s.on_primary_button.green }} {{ s.on_primary_button.blue }};
+      --color-secondary: {{ s.secondary.red }} {{ s.secondary.green }} {{ s.secondary.blue }};
+      --color-accent: {{ s.accent.red }} {{ s.accent.green }} {{ s.accent.blue }};
+      --color-sale: {{ s.sale.red }} {{ s.sale.green }} {{ s.sale.blue }};
+      --color-focus: {{ s.accent.red }} {{ s.accent.green }} {{ s.accent.blue }};
+      {%- if s.background_gradient != blank %}
+      --gradient-background: {{ s.background_gradient }};
+      {%- else %}
+      --gradient-background: rgb(var(--color-background));
+      {%- endif %}
+      color: rgb(var(--color-foreground));
+      background-color: rgb(var(--color-background));
+    }
+  {%- endfor -%}
+
+  :root {
+    /* Type families */
+    --font-body-family: {{ settings.body_font.family }}, {{ settings.body_font.fallback_families }};
+    --font-heading-family: {{ settings.heading_font.family }}, {{ settings.heading_font.fallback_families }};
+    --font-body-weight: {{ settings.body_font.weight | default: 400 }};
+    --font-heading-weight: {{ settings.heading_font.weight | default: 600 }};
+    --line-body: 1.6;
+    --line-heading: 1.15;
+
+    /* Fluid modular type scale (base * heading_scale). clamp(min, fluid, max). */
+    {%- assign hs = settings.heading_scale | divided_by: 100.0 -%}
+    {%- assign bs = settings.body_scale | divided_by: 100.0 -%}
+    --font-body: calc(1rem * {{ bs }});
+    --font-small: calc(0.8125rem * {{ bs }});
+    --font-h6: calc(1rem * {{ hs }});
+    --font-h5: calc(1.15rem * {{ hs }});
+    --font-h4: calc(1.35rem * {{ hs }});
+    --font-h3: clamp(1.5rem, 1.2rem + 1.2vw, 2rem){% comment %} scaled below {% endcomment %};
+    --font-h2: clamp(1.9rem, 1.4rem + 2.2vw, 2.9rem);
+    --font-h1: clamp(2.4rem, 1.6rem + 3.6vw, 4rem);
+    --heading-transform: {{ settings.heading_transform }};
+
+    /* Layout & spacing (8pt scale) */
+    --page-width: {{ settings.page_width }}px;
+    --page-margin: {{ settings.page_margin }}px;
+    --section-padding-block: {{ settings.section_spacing }}px;
+    --grid-gap: {{ settings.grid_gap }}px;
+    --space-1: 4px;  --space-2: 8px;  --space-3: 12px; --space-4: 16px;
+    --space-5: 20px; --space-6: 24px; --space-7: 32px; --space-8: 40px;
+    --space-9: 48px; --space-10: 64px; --space-11: 80px; --space-12: 96px;
+
+    /* Corners */
+    --radius-sm: {{ settings.radius_sm }}px;
+    --radius-md: {{ settings.radius_md }}px;
+    --radius-lg: {{ settings.radius_lg }}px;
+    --radius-pill: 999px;
+
+    /* Buttons */
+    --button-radius: {{ settings.button_radius }}px;
+    --button-border-width: {{ settings.button_border_width }}px;
+
+    /* Shadows (strength driven by one token) */
+    {%- assign so = settings.shadow_opacity | divided_by: 100.0 -%}
+    --shadow-color: 0 0 0;
+    --shadow-sm: 0 1px 2px rgba(var(--shadow-color) / {{ so }});
+    --shadow-md: 0 4px 16px rgba(var(--shadow-color) / {{ so }});
+    --shadow-lg: 0 12px 40px rgba(var(--shadow-color) / {{ so }});
+
+    /* Motion */
+    --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+    --duration-fast: 0.18s;
+    --duration-base: {{ dur_base }};
+    --duration-slow: 0.7s;
+  }
+
+  {%- comment -%} @font-face for the two theme fonts, swap for no CLS. {%- endcomment -%}
+  {{ settings.body_font | font_face: font_display: 'swap' }}
+  {{ settings.heading_font | font_face: font_display: 'swap' }}
+
+  @media (prefers-reduced-motion: reduce) {
+    :root { --duration-fast: 0s; --duration-base: 0s; --duration-slow: 0s; }
+  }
+{%- endstyle -%}

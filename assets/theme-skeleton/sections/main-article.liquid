@@ -1,0 +1,54 @@
+{%- comment -%}
+  main-article.liquid — single article.
+{%- endcomment -%}
+<div class="main-article color-{{ section.settings.color_scheme }}">
+  <article class="main-article__inner page-width section">
+    <header class="main-article__header">
+      <h1 class="main-article__title">{{ article.title }}</h1>
+      {%- if section.settings.show_meta -%}
+        <p class="main-article__meta text-secondary">
+          {{ article.published_at | date: '%B %-d, %Y' }}
+          {%- if article.author != blank %} &middot; {{ article.author }}{% endif -%}
+        </p>
+      {%- endif -%}
+    </header>
+
+    {%- if article.image != blank -%}
+      <div class="main-article__media media">
+        {% render 'responsive-image',
+          image: article.image,
+          sizes: '(max-width: 749px) 100vw, 820px',
+          loading: 'eager',
+          class: 'main-article__img' %}
+      </div>
+    {%- endif -%}
+
+    <div class="main-article__content rte">{{ article.content }}</div>
+  </article>
+</div>
+
+{%- style -%}
+  .main-article__inner { max-width: 820px; display: grid; gap: var(--space-6); }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Article",
+  "tag": "section",
+  "class": "main-article-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_meta",
+      "label": "Show date and author",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

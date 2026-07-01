@@ -1,0 +1,79 @@
+{
+  "//": "REFERENCE product JSON template. Shows the OS 2.0 shape: a main product section carrying reorderable blocks, an @app slot for merchant apps (reviews, subscriptions), plus dynamic sections below the buy box. Copy to templates/product.json (or a named variant templates/product.landing.json) and let the merchant reorder everything in the editor.",
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": { "type": "title", "settings": {} },
+        "price": { "type": "price", "settings": {} },
+        "reviews_badge": { "type": "@app" },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": { "picker_type": "swatch" }
+        },
+        "quantity": { "type": "quantity_selector", "settings": {} },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": { "show_dynamic_checkout": true }
+        },
+        "trust": {
+          "type": "icon_row",
+          "settings": {}
+        },
+        "description": { "type": "description", "settings": {} },
+        "accordion": {
+          "type": "collapsible_row",
+          "settings": {}
+        },
+        "app_subscription": { "type": "@app" }
+      },
+      "block_order": [
+        "title",
+        "price",
+        "reviews_badge",
+        "variant_picker",
+        "quantity",
+        "buy_buttons",
+        "trust",
+        "description",
+        "accordion",
+        "app_subscription"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "gallery_layout": "stacked",
+        "enable_sticky_info": true
+      }
+    },
+    "complementary": {
+      "type": "product-recommendations",
+      "settings": {
+        "heading": "Pairs well with",
+        "products_to_show": 4,
+        "color_scheme": "scheme-1",
+        "recommendation_type": "complementary"
+      }
+    },
+    "reviews": {
+      "type": "apps",
+      "blocks": {},
+      "block_order": [],
+      "settings": {}
+    },
+    "related": {
+      "type": "product-recommendations",
+      "settings": {
+        "heading": "You may also like",
+        "products_to_show": 4,
+        "color_scheme": "scheme-2",
+        "recommendation_type": "related"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "complementary",
+    "reviews",
+    "related"
+  ]
+}

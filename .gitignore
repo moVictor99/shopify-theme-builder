@@ -1,0 +1,17 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+
+# Node / npm caches (never part of this skill)
+node_modules/
+npm-cache/
+.npm/
+*.log
+
+# Python
+__pycache__/
+*.pyc
+
+# Shopify CLI local state (if you validate the skeleton in a store)
+.shopify/

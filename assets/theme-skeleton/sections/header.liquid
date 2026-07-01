@@ -1,0 +1,124 @@
+{%- comment -%}
+  header.liquid — logo/shop name, primary nav, search + cart links.
+  Progressive enhancement hook: <header-nav> (mobile toggle, defined in global.js).
+{%- endcomment -%}
+<header-nav class="header color-{{ section.settings.color_scheme }}{% if section.settings.sticky %} header--sticky{% endif %}">
+  <div class="header__inner page-width">
+    <div class="header__brand">
+      {%- if settings.logo != blank -%}
+        <a href="{{ routes.root_url }}" class="header__logo-link" aria-label="{{ shop.name | escape }}">
+          {% render 'responsive-image',
+            image: settings.logo,
+            sizes: '(max-width: 749px) 40vw, 120px',
+            loading: 'eager',
+            class: 'header__logo',
+            width_override: settings.logo_width %}
+        </a>
+      {%- else -%}
+        {%- if request.page_type == 'index' -%}
+          <h1 class="header__shop-name"><a href="{{ routes.root_url }}">{{ shop.name }}</a></h1>
+        {%- else -%}
+          <a class="header__shop-name" href="{{ routes.root_url }}">{{ shop.name }}</a>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+
+    <button
+      class="header__toggle button button--ghost"
+      type="button"
+      aria-expanded="false"
+      aria-controls="header-menu"
+      data-header-toggle
+    >
+      <span class="visually-hidden">{{ 'sections.header.menu' | t }}</span>
+      <span class="header__toggle-icon" aria-hidden="true">&#9776;</span>
+    </button>
+
+    {%- if section.settings.menu != blank -%}
+      <nav class="header__nav" id="header-menu" aria-label="{{ 'sections.header.nav_label' | t }}" data-header-nav>
+        <ul class="header__menu" role="list">
+          {%- for link in section.settings.menu.links -%}
+            <li class="header__menu-item">
+              <a
+                href="{{ link.url }}"
+                class="header__menu-link"
+                {% if link.active %}aria-current="page"{% endif %}
+              >
+                {{ link.title }}
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+    {%- endif -%}
+
+    <div class="header__actions">
+      <a class="header__action" href="{{ routes.search_url }}" aria-label="{{ 'sections.header.search' | t }}">
+        <span class="header__action-icon" aria-hidden="true">&#9906;</span>
+      </a>
+      <a class="header__action" href="{{ routes.cart_url }}" aria-label="{{ 'sections.header.cart' | t }}">
+        <span class="header__action-icon" aria-hidden="true">&#128722;</span>
+        <span class="header__cart-count" data-cart-count>{{ cart.item_count }}</span>
+      </a>
+    </div>
+  </div>
+</header-nav>
+
+{%- style -%}
+  .header__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    padding-block: var(--space-4);
+  }
+  .header--sticky { position: sticky; inset-block-start: 0; z-index: 50; }
+  .header__brand { margin-inline-end: auto; }
+  .header__shop-name { font-size: var(--font-h4); margin: 0; }
+  .header__nav { display: flex; }
+  .header__menu { display: flex; gap: var(--space-6); list-style: none; margin: 0; padding: 0; }
+  .header__actions { display: flex; align-items: center; gap: var(--space-4); }
+  .header__action { display: inline-flex; align-items: center; gap: var(--space-1); }
+  .header__cart-count { font-size: var(--font-small); }
+  .header__toggle { display: none; }
+  @media (max-width: 749px) {
+    .header__toggle { display: inline-flex; }
+    .header__nav {
+      display: none;
+      position: absolute;
+      inset-inline: 0;
+      background: rgb(var(--color-background));
+      border-block-end: 1px solid rgb(var(--color-border));
+      padding: var(--space-4);
+    }
+    .header__nav[data-open="true"] { display: block; }
+    .header__menu { flex-direction: column; }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Header",
+  "tag": "section",
+  "class": "header-section",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky",
+      "label": "Sticky header",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

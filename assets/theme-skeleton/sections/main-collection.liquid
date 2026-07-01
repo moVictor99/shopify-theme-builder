@@ -1,0 +1,58 @@
+{%- comment -%}
+  main-collection.liquid — paginated product grid with empty state.
+{%- endcomment -%}
+<div class="main-collection color-{{ section.settings.color_scheme }}">
+  <div class="main-collection__inner page-width section">
+    <header class="main-collection__header">
+      <h1 class="main-collection__title">{{ collection.title }}</h1>
+      {%- if collection.description != blank -%}
+        <div class="main-collection__description rte">{{ collection.description }}</div>
+      {%- endif -%}
+    </header>
+
+    {%- paginate collection.products by 12 -%}
+      {%- if collection.products.size > 0 -%}
+        <div class="main-collection__grid grid">
+          {%- for product in collection.products -%}
+            {% render 'product-card', product: product, show_quick_add: true %}
+          {%- endfor -%}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="pagination" aria-label="{{ 'general.pagination.label' | t }}">
+            {%- if paginate.previous -%}
+              <a href="{{ paginate.previous.url }}" class="pagination__link">{{ 'general.pagination.previous' | t }}</a>
+            {%- endif -%}
+            {%- if paginate.next -%}
+              <a href="{{ paginate.next.url }}" class="pagination__link">{{ 'general.pagination.next' | t }}</a>
+            {%- endif -%}
+          </nav>
+        {%- endif -%}
+      {%- else -%}
+        <p class="main-collection__empty">{{ 'sections.collection.empty' | t }}</p>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</div>
+
+{%- style -%}
+  .main-collection__header { margin-block-end: var(--space-8); }
+  .main-collection__grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+  .pagination { display: flex; gap: var(--space-4); justify-content: center; margin-block-start: var(--space-8); }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Collection",
+  "tag": "section",
+  "class": "main-collection-section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

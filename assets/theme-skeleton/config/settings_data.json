@@ -1,0 +1,146 @@
+{
+  "current": {
+    "color_schemes": {
+      "scheme-1": {
+        "settings": {
+          "background": "#ffffff",
+          "background_gradient": "",
+          "text": "#14110f",
+          "primary_button": "#14110f",
+          "on_primary_button": "#ffffff",
+          "secondary_button": "#ffffff",
+          "on_secondary_button": "#14110f",
+          "border": "#e3ded8",
+          "surface": "#f7f4f0",
+          "secondary": "#6b6560",
+          "accent": "#8a6d3b",
+          "sale": "#b23b3b"
+        }
+      },
+      "scheme-2": {
+        "settings": {
+          "background": "#14110f",
+          "background_gradient": "",
+          "text": "#f7f4f0",
+          "primary_button": "#f7f4f0",
+          "on_primary_button": "#14110f",
+          "secondary_button": "#14110f",
+          "on_secondary_button": "#f7f4f0",
+          "border": "#3a342f",
+          "surface": "#211d1a",
+          "secondary": "#b3aca4",
+          "accent": "#c9a86a",
+          "sale": "#e07a7a"
+        }
+      },
+      "scheme-3": {
+        "settings": {
+          "background": "#f7f4f0",
+          "background_gradient": "",
+          "text": "#14110f",
+          "primary_button": "#8a6d3b",
+          "on_primary_button": "#ffffff",
+          "secondary_button": "#f7f4f0",
+          "on_secondary_button": "#14110f",
+          "border": "#ddd3c5",
+          "surface": "#ffffff",
+          "secondary": "#6b6560",
+          "accent": "#8a6d3b",
+          "sale": "#b23b3b"
+        }
+      }
+    },
+    "heading_font": "assistant_n4",
+    "heading_scale": 115,
+    "heading_transform": "none",
+    "body_font": "assistant_n4",
+    "body_scale": 100,
+    "logo_width": 120,
+    "page_width": 1300,
+    "section_spacing": 64,
+    "grid_gap": 24,
+    "page_margin": 20,
+    "radius_sm": 6,
+    "radius_md": 10,
+    "radius_lg": 20,
+    "shadow_opacity": 12,
+    "button_radius": 10,
+    "button_border_width": 1,
+    "animations_enabled": true,
+    "animation_speed": "base",
+    "cart_type": "drawer"
+  },
+  "presets": {
+    "Theme Builder Base": {
+      "color_schemes": {
+        "scheme-1": {
+          "settings": {
+            "background": "#ffffff",
+            "background_gradient": "",
+            "text": "#14110f",
+            "primary_button": "#14110f",
+            "on_primary_button": "#ffffff",
+            "secondary_button": "#ffffff",
+            "on_secondary_button": "#14110f",
+            "border": "#e3ded8",
+            "surface": "#f7f4f0",
+            "secondary": "#6b6560",
+            "accent": "#8a6d3b",
+            "sale": "#b23b3b"
+          }
+        },
+        "scheme-2": {
+          "settings": {
+            "background": "#14110f",
+            "background_gradient": "",
+            "text": "#f7f4f0",
+            "primary_button": "#f7f4f0",
+            "on_primary_button": "#14110f",
+            "secondary_button": "#14110f",
+            "on_secondary_button": "#f7f4f0",
+            "border": "#3a342f",
+            "surface": "#211d1a",
+            "secondary": "#b3aca4",
+            "accent": "#c9a86a",
+            "sale": "#e07a7a"
+          }
+        },
+        "scheme-3": {
+          "settings": {
+            "background": "#f7f4f0",
+            "background_gradient": "",
+            "text": "#14110f",
+            "primary_button": "#8a6d3b",
+            "on_primary_button": "#ffffff",
+            "secondary_button": "#f7f4f0",
+            "on_secondary_button": "#14110f",
+            "border": "#ddd3c5",
+            "surface": "#ffffff",
+            "secondary": "#6b6560",
+            "accent": "#8a6d3b",
+            "sale": "#b23b3b"
+          }
+        }
+      },
+      "heading_font": "assistant_n4",
+      "heading_scale": 115,
+      "heading_transform": "none",
+      "body_font": "assistant_n4",
+      "body_scale": 100,
+      "logo_width": 120,
+      "page_width": 1300,
+      "section_spacing": 64,
+      "grid_gap": 24,
+      "page_margin": 20,
+      "radius_sm": 6,
+      "radius_md": 10,
+      "radius_lg": 20,
+      "shadow_opacity": 12,
+      "button_radius": 10,
+      "button_border_width": 1,
+      "animations_enabled": true,
+      "animation_speed": "base",
+      "cart_type": "drawer"
+    }
+  }
+}

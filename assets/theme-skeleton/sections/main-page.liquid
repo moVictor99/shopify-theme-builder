@@ -1,0 +1,30 @@
+{%- comment -%}
+  main-page.liquid — standard content page.
+{%- endcomment -%}
+<div class="main-page color-{{ section.settings.color_scheme }}">
+  <div class="main-page__inner page-width section">
+    <h1 class="main-page__title">{{ page.title }}</h1>
+    <div class="main-page__content rte">{{ page.content }}</div>
+  </div>
+</div>
+
+{%- style -%}
+  .main-page__inner { max-width: 820px; }
+  .main-page__title { margin-block-end: var(--space-6); }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Page",
+  "tag": "section",
+  "class": "main-page-section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

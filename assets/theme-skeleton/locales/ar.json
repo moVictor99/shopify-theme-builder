@@ -1,0 +1,156 @@
+{
+  "general": {
+    "meta": {
+      "tags": "الموسومة بـ \"{{ tags }}\"",
+      "page": "صفحة {{ page }}"
+    },
+    "pagination": {
+      "label": "ترقيم الصفحات",
+      "previous": "السابق",
+      "next": "التالي"
+    }
+  },
+  "accessibility": {
+    "skip_to_content": "تخطي إلى المحتوى"
+  },
+  "sections": {
+    "header": {
+      "menu": "القائمة",
+      "nav_label": "التنقل الرئيسي",
+      "search": "بحث",
+      "cart": "عربة التسوق"
+    },
+    "footer": {
+      "rights": "جميع الحقوق محفوظة."
+    },
+    "collection": {
+      "empty": "لا توجد منتجات في هذه المجموعة بعد."
+    },
+    "list_collections": {
+      "title": "المجموعات"
+    },
+    "cart": {
+      "title": "عربة التسوق",
+      "product": "المنتج",
+      "quantity": "الكمية",
+      "total": "الإجمالي",
+      "subtotal": "المجموع الفرعي",
+      "update": "تحديث العربة",
+      "checkout": "إتمام الشراء",
+      "empty": "عربة التسوق فارغة.",
+      "continue_shopping": "متابعة التسوق"
+    },
+    "search": {
+      "title": "بحث",
+      "label": "بحث",
+      "placeholder": "ابحث في متجرنا",
+      "submit": "بحث",
+      "results_count": "{{ count }} نتيجة",
+      "no_results": "لا توجد نتائج لـ \"{{ terms }}\"."
+    },
+    "not_found": {
+      "title": "الصفحة غير موجودة",
+      "text": "الصفحة التي تبحث عنها غير موجودة.",
+      "link": "العودة إلى الرئيسية"
+    },
+    "password": {
+      "error": "كلمة المرور غير صحيحة. حاول مرة أخرى.",
+      "label": "كلمة المرور",
+      "placeholder": "أدخل كلمة مرور المتجر",
+      "submit": "دخول"
+    }
+  },
+  "newsletter": {
+    "success": "شكراً لاشتراكك.",
+    "email_label": "البريد الإلكتروني",
+    "email_placeholder": "عنوان البريد الإلكتروني",
+    "submit": "اشتراك"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "أضف إلى العربة",
+      "sold_out": "نفدت الكمية",
+      "variant": "الخيار"
+    }
+  },
+  "gift_cards": {
+    "issued": {
+      "title": "بطاقة هدية",
+      "subtext": "إليك بطاقة الهدية من {{ shop }}.",
+      "balance": "الرصيد",
+      "qr_alt": "رمز الاستجابة السريعة",
+      "code": "رمز بطاقة الهدية",
+      "shop_link": "ابدأ التسوق"
+    }
+  },
+  "customer": {
+    "log_out": "تسجيل الخروج",
+    "account": {
+      "title": "حسابي",
+      "welcome": "مرحباً بعودتك، {{ name }}.",
+      "view_addresses": "عرض العناوين"
+    },
+    "orders": {
+      "title": "سجل الطلبات",
+      "order_number": "الطلب",
+      "date": "التاريخ",
+      "total": "الإجمالي",
+      "none": "لم تقم بأي طلبات بعد."
+    },
+    "login": {
+      "title": "تسجيل الدخول",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "submit": "تسجيل الدخول",
+      "create_account": "إنشاء حساب"
+    },
+    "recover_password": {
+      "title": "إعادة تعيين كلمة المرور",
+      "success": "أرسلنا إليك بريداً إلكترونياً يحتوي على رابط لتحديث كلمة المرور.",
+      "submit": "إرسال رابط إعادة التعيين"
+    },
+    "register": {
+      "title": "إنشاء حساب",
+      "first_name": "الاسم الأول",
+      "last_name": "اسم العائلة",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "submit": "إنشاء",
+      "have_account": "لديك حساب بالفعل؟ سجّل الدخول"
+    },
+    "order": {
+      "title": "الطلب {{ name }}",
+      "product": "المنتج",
+      "quantity": "الكمية",
+      "total": "الإجمالي",
+      "back": "العودة إلى الحساب"
+    },
+    "addresses": {
+      "title": "العناوين",
+      "back": "العودة إلى الحساب",
+      "add_new": "إضافة عنوان جديد",
+      "first_name": "الاسم الأول",
+      "last_name": "اسم العائلة",
+      "address1": "العنوان",
+      "city": "المدينة",
+      "country": "الدولة",
+      "save": "حفظ العنوان",
+      "saved": "العناوين المحفوظة"
+    },
+    "activate_account": {
+      "title": "تفعيل الحساب",
+      "subtext": "أنشئ كلمة المرور لتفعيل حسابك.",
+      "password": "كلمة المرور",
+      "password_confirm": "تأكيد كلمة المرور",
+      "submit": "تفعيل الحساب",
+      "decline": "رفض الدعوة"
+    },
+    "reset_password": {
+      "title": "إعادة تعيين كلمة مرور الحساب",
+      "subtext": "أدخل كلمة مرور جديدة.",
+      "password": "كلمة المرور",
+      "password_confirm": "تأكيد كلمة المرور",
+      "submit": "إعادة تعيين كلمة المرور"
+    }
+  }
+}

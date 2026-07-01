@@ -1,0 +1,54 @@
+{%- comment -%}
+  main-activate-account.liquid — activate account via token link.
+{%- endcomment -%}
+<div class="main-activate color-{{ section.settings.color_scheme }}">
+  <div class="main-activate__inner page-width section">
+    <h1 class="main-activate__title">{{ 'customer.activate_account.title' | t }}</h1>
+    <p>{{ 'customer.activate_account.subtext' | t }}</p>
+
+    {%- form 'activate_customer_password', class: 'main-activate__form' -%}
+      {%- if form.errors -%}
+        <ul class="form__errors" role="list">
+          {%- for field in form.errors -%}
+            <li>{{ form.errors.messages[field] }}</li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+      <label for="ActivatePassword">{{ 'customer.activate_account.password' | t }}</label>
+      <input id="ActivatePassword" type="password" name="customer[password]" autocomplete="new-password" required>
+
+      <label for="ActivatePasswordConfirm">{{ 'customer.activate_account.password_confirm' | t }}</label>
+      <input id="ActivatePasswordConfirm" type="password" name="customer[password_confirmation]" autocomplete="new-password" required>
+
+      <div class="main-activate__actions">
+        <button type="submit" name="commit" class="button">{{ 'customer.activate_account.submit' | t }}</button>
+        <button type="submit" name="decline" class="button button--secondary">{{ 'customer.activate_account.decline' | t }}</button>
+      </div>
+    {%- endform -%}
+  </div>
+</div>
+
+{%- style -%}
+  .main-activate__inner { max-width: 480px; display: grid; gap: var(--space-4); }
+  .main-activate__form { display: grid; gap: var(--space-3); }
+  .main-activate__form input {
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid rgb(var(--color-border));
+    border-radius: var(--radius-sm);
+  }
+  .main-activate__actions { display: flex; gap: var(--space-3); }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Activate account",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

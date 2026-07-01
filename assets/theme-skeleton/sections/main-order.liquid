@@ -1,0 +1,60 @@
+{%- comment -%}
+  main-order.liquid — single customer order detail.
+{%- endcomment -%}
+<div class="main-order color-{{ section.settings.color_scheme }}">
+  <div class="main-order__inner page-width section">
+    <h1 class="main-order__title">{{ 'customer.order.title' | t: name: order.name }}</h1>
+    <p class="main-order__date text-secondary">{{ order.created_at | date: '%B %-d, %Y' }}</p>
+
+    <table class="main-order__table">
+      <thead>
+        <tr>
+          <th scope="col">{{ 'customer.order.product' | t }}</th>
+          <th scope="col">{{ 'customer.order.quantity' | t }}</th>
+          <th scope="col">{{ 'customer.order.total' | t }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for line_item in order.line_items -%}
+          <tr>
+            <td>{{ line_item.title }}</td>
+            <td>{{ line_item.quantity }}</td>
+            <td>{{ line_item.final_line_price | money }}</td>
+          </tr>
+        {%- endfor -%}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th scope="row" colspan="2">{{ 'customer.order.total' | t }}</th>
+          <td>{{ order.total_price | money }}</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <p><a href="{{ routes.account_url }}">{{ 'customer.order.back' | t }}</a></p>
+  </div>
+</div>
+
+{%- style -%}
+  .main-order__inner { display: grid; gap: var(--space-4); }
+  .main-order__table { width: 100%; border-collapse: collapse; }
+  .main-order__table th, .main-order__table td {
+    text-align: start;
+    padding: var(--space-3);
+    border-block-end: 1px solid rgb(var(--color-border));
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Order",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

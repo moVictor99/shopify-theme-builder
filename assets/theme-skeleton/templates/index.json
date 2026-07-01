@@ -1,0 +1,19 @@
+{
+  "sections": {
+    "rich-text": {
+      "type": "rich-text",
+      "blocks": {
+        "heading": { "type": "heading", "settings": {} },
+        "text": { "type": "text", "settings": {} },
+        "button": { "type": "button", "settings": {} }
+      },
+      "block_order": ["heading", "text", "button"],
+      "settings": {}
+    },
+    "image-with-text": {
+      "type": "image-with-text",
+      "settings": {}
+    }
+  },
+  "order": ["rich-text", "image-with-text"]
+}

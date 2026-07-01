@@ -1,0 +1,101 @@
+{%- comment -%}
+  main-cart.liquid — full cart page fallback.
+{%- endcomment -%}
+<div class="main-cart color-{{ section.settings.color_scheme }}">
+  <div class="main-cart__inner page-width section">
+    <h1 class="main-cart__title">{{ 'sections.cart.title' | t }}</h1>
+
+    {%- if cart.item_count > 0 -%}
+      {%- form 'cart', cart, class: 'main-cart__form' -%}
+        <table class="main-cart__table">
+          <thead>
+            <tr>
+              <th scope="col">{{ 'sections.cart.product' | t }}</th>
+              <th scope="col">{{ 'sections.cart.quantity' | t }}</th>
+              <th scope="col">{{ 'sections.cart.total' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for item in cart.items -%}
+              <tr class="main-cart__row">
+                <td class="main-cart__item">
+                  <a href="{{ item.url }}" class="main-cart__item-title">{{ item.product.title }}</a>
+                  {%- unless item.product.has_only_default_variant -%}
+                    <p class="text-secondary">{{ item.variant.title }}</p>
+                  {%- endunless -%}
+                </td>
+                <td>
+                  <label class="visually-hidden" for="Quantity-{{ item.index | plus: 1 }}">
+                    {{ 'sections.cart.quantity' | t }}
+                  </label>
+                  <input
+                    id="Quantity-{{ item.index | plus: 1 }}"
+                    class="main-cart__quantity"
+                    type="number"
+                    name="updates[]"
+                    value="{{ item.quantity }}"
+                    min="0"
+                    data-quantity-input
+                  >
+                </td>
+                <td>{{ item.final_line_price | money }}</td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+
+        <div class="main-cart__footer">
+          <p class="main-cart__subtotal">
+            {{ 'sections.cart.subtotal' | t }}: <strong>{{ cart.total_price | money }}</strong>
+          </p>
+          <div class="main-cart__actions">
+            <button type="submit" name="update" class="button button--secondary">
+              {{ 'sections.cart.update' | t }}
+            </button>
+            <button type="submit" name="checkout" class="button">
+              {{ 'sections.cart.checkout' | t }}
+            </button>
+          </div>
+        </div>
+      {%- endform -%}
+    {%- else -%}
+      <p class="main-cart__empty">{{ 'sections.cart.empty' | t }}</p>
+      <a href="{{ routes.all_products_collection_url }}" class="button">
+        {{ 'sections.cart.continue_shopping' | t }}
+      </a>
+    {%- endif -%}
+  </div>
+</div>
+
+{%- style -%}
+  .main-cart__table { width: 100%; border-collapse: collapse; margin-block: var(--space-6); }
+  .main-cart__table th, .main-cart__table td {
+    text-align: start;
+    padding: var(--space-3);
+    border-block-end: 1px solid rgb(var(--color-border));
+  }
+  .main-cart__quantity {
+    width: 4rem;
+    padding: var(--space-2);
+    border: 1px solid rgb(var(--color-border));
+    border-radius: var(--radius-sm);
+  }
+  .main-cart__footer { display: grid; gap: var(--space-4); justify-items: end; }
+  .main-cart__actions { display: flex; gap: var(--space-3); }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Cart",
+  "tag": "section",
+  "class": "main-cart-section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

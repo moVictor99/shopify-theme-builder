@@ -1,0 +1,66 @@
+{%- comment -%}
+  main-addresses.liquid — manage customer addresses.
+{%- endcomment -%}
+<div class="main-addresses color-{{ section.settings.color_scheme }}">
+  <div class="main-addresses__inner page-width section">
+    <h1 class="main-addresses__title">{{ 'customer.addresses.title' | t }}</h1>
+    <p><a href="{{ routes.account_url }}">{{ 'customer.addresses.back' | t }}</a></p>
+
+    <h2 class="main-addresses__subtitle">{{ 'customer.addresses.add_new' | t }}</h2>
+    {%- form 'customer_address', customer.new_address, class: 'main-addresses__form' -%}
+      <label for="AddressFirstNameNew">{{ 'customer.addresses.first_name' | t }}</label>
+      <input id="AddressFirstNameNew" type="text" name="address[first_name]" autocomplete="given-name">
+
+      <label for="AddressLastNameNew">{{ 'customer.addresses.last_name' | t }}</label>
+      <input id="AddressLastNameNew" type="text" name="address[last_name]" autocomplete="family-name">
+
+      <label for="AddressAddress1New">{{ 'customer.addresses.address1' | t }}</label>
+      <input id="AddressAddress1New" type="text" name="address[address1]" autocomplete="address-line1">
+
+      <label for="AddressCityNew">{{ 'customer.addresses.city' | t }}</label>
+      <input id="AddressCityNew" type="text" name="address[city]" autocomplete="address-level2">
+
+      <label for="AddressCountryNew">{{ 'customer.addresses.country' | t }}</label>
+      <input id="AddressCountryNew" type="text" name="address[country]" autocomplete="country-name">
+
+      <button type="submit" class="button">{{ 'customer.addresses.save' | t }}</button>
+    {%- endform -%}
+
+    {%- if customer.addresses.size > 0 -%}
+      <h2 class="main-addresses__subtitle">{{ 'customer.addresses.saved' | t }}</h2>
+      <ul class="main-addresses__list" role="list">
+        {%- for address in customer.addresses -%}
+          <li class="main-addresses__item card">
+            {{ address | format_address }}
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</div>
+
+{%- style -%}
+  .main-addresses__inner { display: grid; gap: var(--space-4); }
+  .main-addresses__form { display: grid; gap: var(--space-3); max-width: 480px; }
+  .main-addresses__form input {
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid rgb(var(--color-border));
+    border-radius: var(--radius-sm);
+  }
+  .main-addresses__list { list-style: none; padding: 0; display: grid; gap: var(--space-4); }
+  .main-addresses__item { padding: var(--space-4); }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Addresses",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

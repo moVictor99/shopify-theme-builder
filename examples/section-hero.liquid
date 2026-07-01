@@ -1,0 +1,306 @@
+{%- comment -%}
+  ============================================================================
+  section-hero.liquid — REFERENCE-QUALITY SECTION
+  Pattern-match every section you build against this file. It demonstrates the
+  non-negotiables in one place:
+
+    1. 100% theme-editor controllable  — no hard-coded text, image, color, or
+       layout choice. Everything is a setting or a block.
+    2. Token-driven styling            — scoped CSS reads var(--token) only,
+       never a literal color/size. Section opts into a color scheme.
+    3. Accessibility                   — semantic landmark, real heading level,
+       alt text from settings, visible focus, reduced-motion safe.
+    4. Performance                     — responsive srcset, width/height to kill
+       CLS, eager+fetchpriority for the LCP hero image.
+    5. i18n / RTL                      — logical CSS properties, no physical
+       left/right; content strings come from the merchant (already localizable
+       because the merchant edits per-locale in the theme editor).
+    6. Blocks                          — add / remove / reorder content items.
+  Scoped with #Hero-{{ section.id }} so styles never leak between instances.
+  ============================================================================
+{%- endcomment -%}
+
+{%- liquid
+  assign section_bg = section.settings.image
+  assign overlay = section.settings.overlay_opacity | divided_by: 100.0
+  assign min_height = section.settings.min_height
+  assign align = section.settings.content_alignment
+-%}
+
+<section
+  id="Hero-{{ section.id }}"
+  class="hero color-{{ section.settings.color_scheme }}{% if section.settings.animate %} reveal{% endif %}"
+  aria-label="{{ section.settings.aria_label | default: section.settings.heading | escape }}"
+  style="--hero-min-height: {{ min_height }}px; --hero-overlay: {{ overlay }};"
+>
+  {%- if section_bg != blank -%}
+    <div class="hero__media media" aria-hidden="true">
+      {%- comment -%} LCP image: eager + high priority, explicit dimensions. {%- endcomment -%}
+      {{
+        section_bg
+        | image_url: width: 2000
+        | image_tag:
+          loading: 'eager',
+          fetchpriority: 'high',
+          sizes: '100vw',
+          widths: '600, 800, 1000, 1200, 1600, 2000',
+          width: section_bg.width,
+          height: section_bg.height,
+          alt: section_bg.alt | default: section.settings.heading
+      }}
+      <div class="hero__overlay"></div>
+    </div>
+  {%- endif -%}
+
+  <div class="hero__inner page-width" data-align="{{ align }}">
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'subheading' -%}
+          <p class="hero__eyebrow" {{ block.shopify_attributes }}>
+            {{ block.settings.text }}
+          </p>
+        {%- when 'heading' -%}
+          <{{ block.settings.heading_tag }}
+            class="hero__heading"
+            {{ block.shopify_attributes }}
+          >
+            {{ block.settings.text }}
+          </{{ block.settings.heading_tag }}>
+        {%- when 'text' -%}
+          <div class="hero__text rte" {{ block.shopify_attributes }}>
+            {{ block.settings.text }}
+          </div>
+        {%- when 'button' -%}
+          {%- if block.settings.label != blank -%}
+            <a
+              class="button{% if block.settings.style == 'secondary' %} button--secondary{% endif %}"
+              {% if block.settings.link != blank %}href="{{ block.settings.link }}"{% else %}role="link" aria-disabled="true"{% endif %}
+              {{ block.shopify_attributes }}
+            >
+              {{ block.settings.label }}
+            </a>
+          {%- endif -%}
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+{%- comment -%} Scoped styles — tokens only, logical properties for RTL. {%- endcomment -%}
+{% stylesheet %}
+  .hero {
+    position: relative;
+    display: grid;
+    align-items: center;
+    min-height: var(--hero-min-height, 480px);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .hero__media {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: 0;
+  }
+  .hero__media img { width: 100%; height: 100%; object-fit: cover; }
+  .hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgb(var(--color-foreground) / var(--hero-overlay, 0));
+  }
+  .hero__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding-block: var(--space-10);
+  }
+  .hero__inner[data-align="center"] { align-items: center; text-align: center; }
+  .hero__inner[data-align="start"]  { align-items: flex-start; text-align: start; }
+  .hero__inner[data-align="end"]    { align-items: flex-end; text-align: end; }
+  .hero__eyebrow {
+    margin: 0;
+    font-size: var(--font-small);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgb(var(--color-secondary));
+  }
+  .hero__heading { margin: 0; font-size: var(--font-h1); max-inline-size: 20ch; }
+  .hero__text { max-inline-size: 52ch; color: rgb(var(--color-foreground) / 0.9); }
+  .hero__inner .button { margin-block-start: var(--space-2); }
+
+  @media screen and (max-width: 749px) {
+    .hero__heading { font-size: var(--font-h2); }
+    .hero__inner { padding-block: var(--space-8); }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "t:sections.hero.name",
+  "tag": "section",
+  "class": "section-hero",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.hero.settings.header_layout"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.hero.settings.image.label",
+      "info": "t:sections.hero.settings.image.info"
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "min": 320,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "label": "t:sections.hero.settings.min_height.label",
+      "default": 520
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "label": "t:sections.hero.settings.overlay_opacity.label",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "t:sections.hero.settings.content_alignment.label",
+      "options": [
+        { "value": "start", "label": "t:sections.hero.settings.content_alignment.options.start" },
+        { "value": "center", "label": "t:sections.hero.settings.content_alignment.options.center" },
+        { "value": "end", "label": "t:sections.hero.settings.content_alignment.options.end" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.hero.settings.header_appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.hero.settings.color_scheme.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "animate",
+      "label": "t:sections.hero.settings.animate.label",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:sections.hero.settings.header_a11y"
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "t:sections.hero.settings.aria_label.label",
+      "info": "t:sections.hero.settings.aria_label.info"
+    }
+  ],
+  "max_blocks": 6,
+  "blocks": [
+    {
+      "type": "subheading",
+      "name": "t:sections.hero.blocks.subheading.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "t:sections.hero.blocks.subheading.settings.text.label",
+          "default": "New collection"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "name": "t:sections.hero.blocks.heading.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "label": "t:sections.hero.blocks.heading.settings.text.label",
+          "default": "Skin that speaks for itself"
+        },
+        {
+          "type": "select",
+          "id": "heading_tag",
+          "label": "t:sections.hero.blocks.heading.settings.heading_tag.label",
+          "info": "t:sections.hero.blocks.heading.settings.heading_tag.info",
+          "options": [
+            { "value": "h1", "label": "H1" },
+            { "value": "h2", "label": "H2" }
+          ],
+          "default": "h1"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "t:sections.hero.blocks.text.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:sections.hero.blocks.text.settings.text.label",
+          "default": "<p>Clean, effective formulas made for every day.</p>"
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "t:sections.hero.blocks.button.name",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "t:sections.hero.blocks.button.settings.label.label",
+          "default": "Shop now"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:sections.hero.blocks.button.settings.link.label"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "t:sections.hero.blocks.button.settings.style.label",
+          "options": [
+            { "value": "primary", "label": "t:sections.hero.blocks.button.settings.style.options.primary" },
+            { "value": "secondary", "label": "t:sections.hero.blocks.button.settings.style.options.secondary" }
+          ],
+          "default": "primary"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.hero.presets.name",
+      "blocks": [
+        { "type": "subheading" },
+        { "type": "heading" },
+        { "type": "text" },
+        { "type": "button" }
+      ]
+    }
+  ]
+}
+{% endschema %}

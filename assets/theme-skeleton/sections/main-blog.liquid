@@ -1,0 +1,67 @@
+{%- comment -%}
+  main-blog.liquid — paginated article cards.
+{%- endcomment -%}
+<div class="main-blog color-{{ section.settings.color_scheme }}">
+  <div class="main-blog__inner page-width section">
+    <h1 class="main-blog__title">{{ blog.title }}</h1>
+
+    {%- paginate blog.articles by 12 -%}
+      <div class="main-blog__grid grid">
+        {%- for article in blog.articles -%}
+          <article class="main-blog__card card">
+            <a href="{{ article.url }}" class="main-blog__link">
+              {%- if article.image != blank -%}
+                <div class="main-blog__media media">
+                  {% render 'responsive-image',
+                    image: article.image,
+                    sizes: '(max-width: 749px) 100vw, 33vw',
+                    loading: 'lazy',
+                    class: 'main-blog__img' %}
+                </div>
+              {%- endif -%}
+              <h2 class="main-blog__card-title">{{ article.title }}</h2>
+            </a>
+            <p class="main-blog__meta text-secondary">{{ article.published_at | date: '%B %-d, %Y' }}</p>
+            {%- if article.excerpt_or_content != blank -%}
+              <div class="main-blog__excerpt rte">{{ article.excerpt_or_content | strip_html | truncatewords: 30 }}</div>
+            {%- endif -%}
+          </article>
+        {%- endfor -%}
+      </div>
+
+      {%- if paginate.pages > 1 -%}
+        <nav class="pagination" aria-label="{{ 'general.pagination.label' | t }}">
+          {%- if paginate.previous -%}
+            <a href="{{ paginate.previous.url }}" class="pagination__link">{{ 'general.pagination.previous' | t }}</a>
+          {%- endif -%}
+          {%- if paginate.next -%}
+            <a href="{{ paginate.next.url }}" class="pagination__link">{{ 'general.pagination.next' | t }}</a>
+          {%- endif -%}
+        </nav>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</div>
+
+{%- style -%}
+  .main-blog__grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); margin-block-start: var(--space-8); }
+  .main-blog__card { display: grid; gap: var(--space-3); padding: var(--space-4); }
+  .main-blog__card-title { font-size: var(--font-h5); }
+  .pagination { display: flex; gap: var(--space-4); justify-content: center; margin-block-start: var(--space-8); }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Blog",
+  "tag": "section",
+  "class": "main-blog-section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

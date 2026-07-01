@@ -1,0 +1,22 @@
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "message-1": {
+          "type": "message",
+          "settings": {}
+        }
+      },
+      "block_order": ["message-1"],
+      "settings": {}
+    },
+    "header": {
+      "type": "header",
+      "settings": {}
+    }
+  },
+  "order": ["announcement-bar", "header"]
+}

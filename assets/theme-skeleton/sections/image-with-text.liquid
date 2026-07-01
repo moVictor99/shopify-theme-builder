@@ -1,0 +1,101 @@
+{%- comment -%}
+  image-with-text.liquid — image + text demo homepage section with layout order.
+{%- endcomment -%}
+<div class="image-with-text color-{{ section.settings.color_scheme }}">
+  <div class="image-with-text__inner page-width section reveal image-with-text--{{ section.settings.layout }}">
+    <div class="image-with-text__media media">
+      {%- if section.settings.image != blank -%}
+        {% render 'responsive-image',
+          image: section.settings.image,
+          sizes: '(max-width: 749px) 100vw, 50vw',
+          loading: 'lazy',
+          class: 'image-with-text__img' %}
+      {%- else -%}
+        {{ 'image' | placeholder_svg_tag: 'image-with-text__img placeholder' }}
+      {%- endif -%}
+    </div>
+    <div class="image-with-text__content">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="image-with-text__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+        <div class="image-with-text__text rte">{{ section.settings.text }}</div>
+      {%- endif -%}
+      {%- if section.settings.button_label != blank and section.settings.button_link != blank -%}
+        <a href="{{ section.settings.button_link }}" class="button">{{ section.settings.button_label }}</a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{%- style -%}
+  .image-with-text__inner {
+    display: grid;
+    gap: var(--grid-gap);
+    align-items: center;
+  }
+  @media (min-width: 750px) {
+    .image-with-text__inner { grid-template-columns: 1fr 1fr; }
+    .image-with-text--image_right .image-with-text__media { order: 2; }
+  }
+  .image-with-text__content { display: grid; gap: var(--space-4); align-content: start; }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Image with text",
+  "tag": "section",
+  "class": "image-with-text-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Image position",
+      "options": [
+        { "value": "image_left", "label": "Image first" },
+        { "value": "image_right", "label": "Image last" }
+      ],
+      "default": "image_left"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Image with text"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Pair an image with supporting copy to highlight a product or promotion.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Learn more"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image with text"
+    }
+  ]
+}
+{% endschema %}

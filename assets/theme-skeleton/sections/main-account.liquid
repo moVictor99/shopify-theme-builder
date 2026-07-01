@@ -1,0 +1,60 @@
+{%- comment -%}
+  main-account.liquid — logged-in customer dashboard.
+{%- endcomment -%}
+<div class="main-account color-{{ section.settings.color_scheme }}">
+  <div class="main-account__inner page-width section">
+    <h1 class="main-account__title">{{ 'customer.account.title' | t }}</h1>
+    <p class="main-account__greeting">{{ 'customer.account.welcome' | t: name: customer.name }}</p>
+    <p><a href="{{ routes.account_logout_url }}" class="button button--secondary">{{ 'customer.log_out' | t }}</a></p>
+
+    <h2 class="main-account__subtitle">{{ 'customer.orders.title' | t }}</h2>
+    {%- if customer.orders.size > 0 -%}
+      <table class="main-account__orders">
+        <thead>
+          <tr>
+            <th scope="col">{{ 'customer.orders.order_number' | t }}</th>
+            <th scope="col">{{ 'customer.orders.date' | t }}</th>
+            <th scope="col">{{ 'customer.orders.total' | t }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for order in customer.orders -%}
+            <tr>
+              <td><a href="{{ order.customer_url }}">{{ order.name }}</a></td>
+              <td>{{ order.created_at | date: '%B %-d, %Y' }}</td>
+              <td>{{ order.total_price | money }}</td>
+            </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    {%- else -%}
+      <p>{{ 'customer.orders.none' | t }}</p>
+    {%- endif -%}
+
+    <p><a href="{{ routes.account_addresses_url }}">{{ 'customer.account.view_addresses' | t }}</a></p>
+  </div>
+</div>
+
+{%- style -%}
+  .main-account__inner { display: grid; gap: var(--space-5); }
+  .main-account__orders { width: 100%; border-collapse: collapse; }
+  .main-account__orders th, .main-account__orders td {
+    text-align: start;
+    padding: var(--space-3);
+    border-block-end: 1px solid rgb(var(--color-border));
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Account",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

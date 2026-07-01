@@ -1,0 +1,156 @@
+{
+  "general": {
+    "meta": {
+      "tags": "Tagged \"{{ tags }}\"",
+      "page": "Page {{ page }}"
+    },
+    "pagination": {
+      "label": "Pagination",
+      "previous": "Previous",
+      "next": "Next"
+    }
+  },
+  "accessibility": {
+    "skip_to_content": "Skip to content"
+  },
+  "sections": {
+    "header": {
+      "menu": "Menu",
+      "nav_label": "Primary",
+      "search": "Search",
+      "cart": "Cart"
+    },
+    "footer": {
+      "rights": "All rights reserved."
+    },
+    "collection": {
+      "empty": "There are no products in this collection yet."
+    },
+    "list_collections": {
+      "title": "Collections"
+    },
+    "cart": {
+      "title": "Your cart",
+      "product": "Product",
+      "quantity": "Quantity",
+      "total": "Total",
+      "subtotal": "Subtotal",
+      "update": "Update cart",
+      "checkout": "Check out",
+      "empty": "Your cart is empty.",
+      "continue_shopping": "Continue shopping"
+    },
+    "search": {
+      "title": "Search",
+      "label": "Search",
+      "placeholder": "Search our store",
+      "submit": "Search",
+      "results_count": "{{ count }} results",
+      "no_results": "No results found for \"{{ terms }}\"."
+    },
+    "not_found": {
+      "title": "Page not found",
+      "text": "The page you were looking for does not exist.",
+      "link": "Back to home"
+    },
+    "password": {
+      "error": "Wrong password. Please try again.",
+      "label": "Password",
+      "placeholder": "Enter store password",
+      "submit": "Enter"
+    }
+  },
+  "newsletter": {
+    "success": "Thanks for subscribing.",
+    "email_label": "Email",
+    "email_placeholder": "Email address",
+    "submit": "Subscribe"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to cart",
+      "sold_out": "Sold out",
+      "variant": "Variant"
+    }
+  },
+  "gift_cards": {
+    "issued": {
+      "title": "Gift card",
+      "subtext": "Here's your {{ shop }} gift card.",
+      "balance": "Balance",
+      "qr_alt": "QR code",
+      "code": "Gift card code",
+      "shop_link": "Start shopping"
+    }
+  },
+  "customer": {
+    "log_out": "Log out",
+    "account": {
+      "title": "My account",
+      "welcome": "Welcome back, {{ name }}.",
+      "view_addresses": "View addresses"
+    },
+    "orders": {
+      "title": "Order history",
+      "order_number": "Order",
+      "date": "Date",
+      "total": "Total",
+      "none": "You haven't placed any orders yet."
+    },
+    "login": {
+      "title": "Log in",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Log in",
+      "create_account": "Create account"
+    },
+    "recover_password": {
+      "title": "Reset your password",
+      "success": "We've sent you an email with a link to update your password.",
+      "submit": "Send reset link"
+    },
+    "register": {
+      "title": "Create account",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Create",
+      "have_account": "Already have an account? Log in"
+    },
+    "order": {
+      "title": "Order {{ name }}",
+      "product": "Product",
+      "quantity": "Quantity",
+      "total": "Total",
+      "back": "Back to account"
+    },
+    "addresses": {
+      "title": "Addresses",
+      "back": "Back to account",
+      "add_new": "Add a new address",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "address1": "Address",
+      "city": "City",
+      "country": "Country",
+      "save": "Save address",
+      "saved": "Saved addresses"
+    },
+    "activate_account": {
+      "title": "Activate account",
+      "subtext": "Create your password to activate your account.",
+      "password": "Password",
+      "password_confirm": "Confirm password",
+      "submit": "Activate account",
+      "decline": "Decline invitation"
+    },
+    "reset_password": {
+      "title": "Reset account password",
+      "subtext": "Enter a new password.",
+      "password": "Password",
+      "password_confirm": "Confirm password",
+      "submit": "Reset password"
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{%- comment -%}
+  main-list-collections.liquid — grid of all collections.
+{%- endcomment -%}
+<div class="list-collections color-{{ section.settings.color_scheme }}">
+  <div class="list-collections__inner page-width section">
+    <h1 class="list-collections__title">{{ 'sections.list_collections.title' | t }}</h1>
+    <div class="list-collections__grid grid">
+      {%- for collection in collections -%}
+        <a href="{{ collection.url }}" class="list-collections__item card">
+          <div class="list-collections__media media">
+            {%- if collection.featured_image != blank -%}
+              {% render 'responsive-image',
+                image: collection.featured_image,
+                sizes: '(max-width: 749px) 50vw, 25vw',
+                loading: 'lazy',
+                class: 'list-collections__img' %}
+            {%- else -%}
+              {{ 'collection-1' | placeholder_svg_tag: 'placeholder' }}
+            {%- endif -%}
+          </div>
+          <h2 class="list-collections__name">{{ collection.title }}</h2>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{%- style -%}
+  .list-collections__grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); margin-block-start: var(--space-8); }
+  .list-collections__item { display: grid; gap: var(--space-3); padding: var(--space-4); }
+  .list-collections__name { font-size: var(--font-h5); }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "List collections",
+  "tag": "section",
+  "class": "list-collections-section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

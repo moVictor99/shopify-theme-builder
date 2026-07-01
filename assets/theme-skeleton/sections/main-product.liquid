@@ -1,0 +1,132 @@
+{%- comment -%}
+  main-product.liquid — media gallery + product form driven by section blocks.
+{%- endcomment -%}
+<div class="main-product color-{{ section.settings.color_scheme }}">
+  <div class="main-product__inner page-width section">
+    <div class="main-product__grid">
+      <div class="main-product__media">
+        {%- if product.media.size > 0 -%}
+          {%- for media in product.media -%}
+            <div class="main-product__media-item media">
+              {% render 'responsive-image',
+                image: media.preview_image,
+                sizes: '(max-width: 749px) 100vw, 50vw',
+                loading: forloop.first,
+                class: 'main-product__img' %}
+            </div>
+          {%- endfor -%}
+        {%- else -%}
+          <div class="main-product__media-item media">
+            {{ 'product-1' | placeholder_svg_tag: 'placeholder' }}
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="main-product__details">
+        {%- assign current_variant = product.selected_or_first_available_variant -%}
+        {%- for block in section.blocks -%}
+          <div class="main-product__block" {{ block.shopify_attributes }}>
+            {%- case block.type -%}
+              {%- when 'title' -%}
+                <h1 class="main-product__title">{{ product.title }}</h1>
+              {%- when 'price' -%}
+                <div class="main-product__price">
+                  {%- if product.compare_at_price > product.price -%}
+                    <span class="price price--sale">{{ current_variant.price | money }}</span>
+                    <s class="price__compare">{{ product.compare_at_price | money }}</s>
+                  {%- else -%}
+                    <span class="price">{{ current_variant.price | money }}</span>
+                  {%- endif -%}
+                </div>
+              {%- when 'variant_picker' -%}
+                {%- unless product.has_only_default_variant -%}
+                  {%- for option in product.options_with_values -%}
+                    <div class="main-product__option">
+                      <label for="Option-{{ section.id }}-{{ forloop.index0 }}">{{ option.name }}</label>
+                    </div>
+                  {%- endfor -%}
+                {%- endunless -%}
+              {%- when 'description' -%}
+                <div class="main-product__description rte">{{ product.description }}</div>
+              {%- when 'buy_buttons' -%}
+                {%- form 'product', product, class: 'main-product__form', id: 'product-form-' | append: section.id -%}
+                  <select name="id" class="main-product__variant-select" aria-label="{{ 'products.product.variant' | t }}">
+                    {%- for variant in product.variants -%}
+                      <option
+                        value="{{ variant.id }}"
+                        {% if variant == current_variant %}selected{% endif %}
+                        {% unless variant.available %}disabled{% endunless %}
+                      >
+                        {{ variant.title }} - {{ variant.price | money }}
+                      </option>
+                    {%- endfor -%}
+                  </select>
+                  <button
+                    type="submit"
+                    name="add"
+                    class="button main-product__submit"
+                    {% unless product.available %}disabled{% endunless %}
+                  >
+                    {%- if product.available -%}
+                      {{ 'products.product.add_to_cart' | t }}
+                    {%- else -%}
+                      {{ 'products.product.sold_out' | t }}
+                    {%- endif -%}
+                  </button>
+                {%- endform -%}
+            {%- endcase -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- style -%}
+  .main-product__grid { display: grid; gap: var(--grid-gap); }
+  @media (min-width: 750px) { .main-product__grid { grid-template-columns: 1fr 1fr; } }
+  .main-product__media { display: grid; gap: var(--space-4); }
+  .main-product__details { display: grid; gap: var(--space-4); align-content: start; }
+  .main-product__variant-select {
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid rgb(var(--color-border));
+    border-radius: var(--radius-sm);
+    background: rgb(var(--color-background));
+    margin-block-end: var(--space-3);
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Product",
+  "tag": "section",
+  "class": "main-product-section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    { "type": "title", "name": "Title", "limit": 1 },
+    { "type": "price", "name": "Price", "limit": 1 },
+    { "type": "variant_picker", "name": "Variant picker", "limit": 1 },
+    { "type": "buy_buttons", "name": "Buy buttons", "limit": 1 },
+    { "type": "description", "name": "Description", "limit": 1 }
+  ],
+  "presets": [
+    {
+      "name": "Product",
+      "blocks": [
+        { "type": "title" },
+        { "type": "price" },
+        { "type": "variant_picker" },
+        { "type": "buy_buttons" },
+        { "type": "description" }
+      ]
+    }
+  ]
+}
+{% endschema %}

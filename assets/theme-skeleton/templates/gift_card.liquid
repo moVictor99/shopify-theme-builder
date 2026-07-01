@@ -1,0 +1,54 @@
+<!doctype html>
+<html
+  lang="{{ request.locale.iso_code }}"
+  dir="{% if request.locale.iso_code == 'ar' or request.locale.iso_code == 'he' or request.locale.iso_code == 'fa' or request.locale.iso_code == 'ur' %}rtl{% else %}ltr{% endif %}"
+>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="{{ settings.color_schemes.scheme-1.settings.background }}">
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {%- endif -%}
+    <title>{{ 'gift_cards.issued.title' | t }} &ndash; {{ shop.name }}</title>
+    {% render 'css-variables' %}
+    {{ content_for_header }}
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+  </head>
+
+  <body class="template-gift-card color-scheme-1">
+    <main id="MainContent" role="main" class="gift-card page-width section" tabindex="-1">
+      <h1 class="gift-card__title">{{ 'gift_cards.issued.title' | t }}</h1>
+      <p class="gift-card__subtitle">{{ 'gift_cards.issued.subtext' | t: shop: shop.name }}</p>
+
+      <p class="gift-card__balance">
+        {{ 'gift_cards.issued.balance' | t }}:
+        <strong>{{ gift_card.balance | money }}</strong>
+      </p>
+
+      {%- if gift_card.qr_identifier != blank -%}
+        <div class="gift-card__qr">
+          <img
+            src="{{ gift_card.qr_identifier | payment_icon_png_url }}"
+            alt="{{ 'gift_cards.issued.qr_alt' | t }}"
+            width="120"
+            height="120"
+          >
+        </div>
+      {%- endif -%}
+
+      <p class="gift-card__code">
+        {{ 'gift_cards.issued.code' | t }}:
+        <strong>{{ gift_card.code | format_code }}</strong>
+      </p>
+
+      <a href="{{ shop.url }}" class="button">{{ 'gift_cards.issued.shop_link' | t }}</a>
+    </main>
+  </body>
+</html>
+
+{%- style -%}
+  .gift-card { display: grid; gap: var(--space-4); justify-items: center; text-align: center; max-width: 480px; margin-inline: auto; }
+  .gift-card__balance { font-size: var(--font-h3); }
+{%- endstyle -%}

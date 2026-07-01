@@ -1,0 +1,61 @@
+{%- comment -%}
+  main-login.liquid — customer login + password recovery.
+{%- endcomment -%}
+<div class="main-login color-{{ section.settings.color_scheme }}">
+  <div class="main-login__inner page-width section">
+    <h1 class="main-login__title">{{ 'customer.login.title' | t }}</h1>
+
+    {%- form 'customer_login', class: 'main-login__form' -%}
+      {%- if form.errors -%}
+        <ul class="form__errors" role="list">
+          {%- for field in form.errors -%}
+            <li>{{ form.errors.messages[field] }}</li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+      <label for="CustomerEmail">{{ 'customer.login.email' | t }}</label>
+      <input id="CustomerEmail" type="email" name="customer[email]" autocomplete="email" required>
+
+      <label for="CustomerPassword">{{ 'customer.login.password' | t }}</label>
+      <input id="CustomerPassword" type="password" name="customer[password]" autocomplete="current-password" required>
+
+      <button type="submit" class="button">{{ 'customer.login.submit' | t }}</button>
+    {%- endform -%}
+
+    <p><a href="{{ routes.account_register_url }}">{{ 'customer.login.create_account' | t }}</a></p>
+
+    <h2 class="main-login__recover-title">{{ 'customer.recover_password.title' | t }}</h2>
+    {%- form 'recover_customer_password', class: 'main-login__recover' -%}
+      {%- if form.posted_successfully? -%}
+        <p>{{ 'customer.recover_password.success' | t }}</p>
+      {%- endif -%}
+      <label for="RecoverEmail">{{ 'customer.login.email' | t }}</label>
+      <input id="RecoverEmail" type="email" name="email" autocomplete="email" required>
+      <button type="submit" class="button button--secondary">{{ 'customer.recover_password.submit' | t }}</button>
+    {%- endform -%}
+  </div>
+</div>
+
+{%- style -%}
+  .main-login__inner { max-width: 480px; display: grid; gap: var(--space-4); }
+  .main-login__form, .main-login__recover { display: grid; gap: var(--space-3); }
+  .main-login__form input, .main-login__recover input {
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid rgb(var(--color-border));
+    border-radius: var(--radius-sm);
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Login",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

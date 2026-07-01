@@ -1,0 +1,105 @@
+{%- comment -%}
+  rich-text.liquid — centered heading / text / button demo homepage section.
+{%- endcomment -%}
+<div class="rich-text color-{{ section.settings.color_scheme }}">
+  <div class="rich-text__inner page-width section reveal">
+    {%- for block in section.blocks -%}
+      <div class="rich-text__block" {{ block.shopify_attributes }}>
+        {%- case block.type -%}
+          {%- when 'heading' -%}
+            {%- if block.settings.heading != blank -%}
+              <h2 class="rich-text__heading">{{ block.settings.heading }}</h2>
+            {%- endif -%}
+          {%- when 'text' -%}
+            <div class="rich-text__text rte">{{ block.settings.text }}</div>
+          {%- when 'button' -%}
+            {%- if block.settings.label != blank and block.settings.link != blank -%}
+              <a href="{{ block.settings.link }}" class="button">{{ block.settings.label }}</a>
+            {%- endif -%}
+        {%- endcase -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+{%- style -%}
+  .rich-text__inner {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: var(--space-4);
+    max-width: 720px;
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Rich text",
+  "tag": "section",
+  "class": "rich-text-section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "Heading",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Talk about your brand"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Use this section to share your story, values, and what makes your products special.</p>"
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Button",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Shop now"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Rich text",
+      "blocks": [
+        { "type": "heading" },
+        { "type": "text" },
+        { "type": "button" }
+      ]
+    }
+  ]
+}
+{% endschema %}

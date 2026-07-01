@@ -1,0 +1,42 @@
+{%- comment -%}
+  product-card.liquid — grid card. Params: product (required), show_quick_add (bool).
+{%- endcomment -%}
+{%- if product != blank -%}
+  <div class="product-card card">
+    <a href="{{ product.url }}" class="product-card__link">
+      <div class="product-card__media media">
+        {%- if product.featured_media != blank -%}
+          {% render 'responsive-image',
+            image: product.featured_media.preview_image,
+            sizes: '(max-width: 749px) 50vw, 25vw',
+            loading: 'lazy',
+            class: 'product-card__img' %}
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'product-card__img placeholder' }}
+        {%- endif -%}
+      </div>
+      <h3 class="product-card__title">{{ product.title }}</h3>
+    </a>
+    <div class="product-card__price">
+      {%- if product.compare_at_price > product.price -%}
+        <span class="price price--sale">{{ product.price | money }}</span>
+        <s class="price__compare">{{ product.compare_at_price | money }}</s>
+      {%- else -%}
+        <span class="price">{{ product.price | money }}</span>
+      {%- endif -%}
+    </div>
+    {%- if show_quick_add and product.available -%}
+      <form method="post" action="{{ routes.cart_add_url }}" class="product-card__quick-add">
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        <button type="submit" class="button button--secondary">{{ 'products.product.add_to_cart' | t }}</button>
+      </form>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{%- style -%}
+  .product-card { display: grid; gap: var(--space-3); padding: var(--space-4); }
+  .product-card__title { font-size: var(--font-h6); }
+  .product-card__price { display: flex; gap: var(--space-2); align-items: baseline; }
+  .price__compare { color: rgb(var(--color-secondary)); }
+{%- endstyle -%}

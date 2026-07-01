@@ -1,0 +1,164 @@
+{%- comment -%}
+  footer.liquid — menu / text / newsletter blocks + bottom copyright bar.
+{%- endcomment -%}
+<footer class="footer color-{{ section.settings.color_scheme }}">
+  <div class="footer__inner page-width section">
+    {%- if section.blocks.size > 0 -%}
+      <div class="footer__blocks grid">
+        {%- for block in section.blocks -%}
+          <div class="footer__block" {{ block.shopify_attributes }}>
+            {%- case block.type -%}
+              {%- when 'menu' -%}
+                {%- if block.settings.heading != blank -%}
+                  <h2 class="footer__heading">{{ block.settings.heading }}</h2>
+                {%- endif -%}
+                {%- if block.settings.menu != blank -%}
+                  <ul class="footer__menu" role="list">
+                    {%- for link in block.settings.menu.links -%}
+                      <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                    {%- endfor -%}
+                  </ul>
+                {%- endif -%}
+              {%- when 'text' -%}
+                {%- if block.settings.heading != blank -%}
+                  <h2 class="footer__heading">{{ block.settings.heading }}</h2>
+                {%- endif -%}
+                <div class="footer__text rte">{{ block.settings.text }}</div>
+              {%- when 'newsletter' -%}
+                {%- if block.settings.heading != blank -%}
+                  <h2 class="footer__heading">{{ block.settings.heading }}</h2>
+                {%- endif -%}
+                {%- form 'customer', class: 'footer__newsletter' -%}
+                  <input type="hidden" name="contact[tags]" value="newsletter">
+                  {%- if form.posted_successfully? -%}
+                    <p class="footer__newsletter-success">{{ 'newsletter.success' | t }}</p>
+                  {%- endif -%}
+                  <label class="visually-hidden" for="NewsletterEmail-{{ section.id }}">
+                    {{ 'newsletter.email_label' | t }}
+                  </label>
+                  <div class="footer__newsletter-field">
+                    <input
+                      id="NewsletterEmail-{{ section.id }}"
+                      type="email"
+                      name="contact[email]"
+                      class="footer__newsletter-input"
+                      placeholder="{{ 'newsletter.email_placeholder' | t }}"
+                      autocomplete="email"
+                      required
+                    >
+                    <button type="submit" class="button">{{ 'newsletter.submit' | t }}</button>
+                  </div>
+                {%- endform -%}
+            {%- endcase -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    <div class="footer__bottom">
+      <p class="footer__copyright">
+        &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. {{ 'sections.footer.rights' | t }}
+      </p>
+    </div>
+  </div>
+</footer>
+
+{%- style -%}
+  .footer__blocks {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+  .footer__heading { font-size: var(--font-h5); margin-block-end: var(--space-3); }
+  .footer__menu { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
+  .footer__newsletter-field { display: flex; gap: var(--space-2); }
+  .footer__newsletter-input {
+    flex: 1;
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid rgb(var(--color-border));
+    border-radius: var(--radius-sm);
+    background: rgb(var(--color-background));
+  }
+  .footer__bottom {
+    margin-block-start: var(--space-8);
+    padding-block-start: var(--space-4);
+    border-block-start: 1px solid rgb(var(--color-border));
+    font-size: var(--font-small);
+    color: rgb(var(--color-secondary));
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Footer",
+  "tag": "section",
+  "class": "footer-wrapper",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Shop"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu",
+          "default": "footer"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "About"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Share a little about your brand.</p>"
+        }
+      ]
+    },
+    {
+      "type": "newsletter",
+      "name": "Newsletter",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Newsletter"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer",
+      "blocks": [
+        { "type": "menu" },
+        { "type": "text" },
+        { "type": "newsletter" }
+      ]
+    }
+  ]
+}
+{% endschema %}

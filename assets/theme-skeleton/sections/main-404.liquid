@@ -1,0 +1,30 @@
+{%- comment -%}
+  main-404.liquid — not found page.
+{%- endcomment -%}
+<div class="main-404 color-{{ section.settings.color_scheme }}">
+  <div class="main-404__inner page-width section">
+    <h1 class="main-404__title">{{ 'sections.not_found.title' | t }}</h1>
+    <p class="main-404__text">{{ 'sections.not_found.text' | t }}</p>
+    <a href="{{ routes.root_url }}" class="button">{{ 'sections.not_found.link' | t }}</a>
+  </div>
+</div>
+
+{%- style -%}
+  .main-404__inner { display: grid; gap: var(--space-4); justify-items: center; text-align: center; }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "404",
+  "tag": "section",
+  "class": "main-404-section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

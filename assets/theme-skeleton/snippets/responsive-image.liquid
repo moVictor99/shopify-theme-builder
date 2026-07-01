@@ -1,0 +1,43 @@
+{%- comment -%}
+  responsive-image.liquid — CLS-safe <img> with srcset.
+  Params:
+    image           (required) image object
+    sizes           (optional) sizes attribute; default '100vw'
+    loading         (optional) 'lazy' (default) or 'eager'
+    class           (optional) extra class names
+    width_override  (optional) render width in px (height derived from ratio)
+{%- endcomment -%}
+{%- liquid
+  assign img = image
+  assign img_sizes = sizes | default: '100vw'
+  assign img_loading = loading | default: 'lazy'
+  assign img_class = class | default: ''
+-%}
+{%- if img != blank -%}
+  {%- if width_override != blank -%}
+    {%- assign render_width = width_override | at_most: img.width -%}
+  {%- else -%}
+    {%- assign render_width = img.width -%}
+  {%- endif -%}
+  {%- assign render_height = render_width | divided_by: img.aspect_ratio | round -%}
+  <img
+    src="{{ img | image_url: width: render_width }}"
+    srcset="
+      {%- assign widths = '300,400,600,800,1000,1200,1600,2000' | split: ',' -%}
+      {%- for w in widths -%}
+        {%- assign wi = w | plus: 0 -%}
+        {%- if wi <= img.width -%}
+          {{ img | image_url: width: wi }} {{ wi }}w,
+        {%- endif -%}
+      {%- endfor -%}
+      {{ img | image_url: width: img.width }} {{ img.width }}w
+    "
+    sizes="{{ img_sizes }}"
+    width="{{ render_width }}"
+    height="{{ render_height }}"
+    alt="{{ img.alt | escape }}"
+    loading="{{ img_loading }}"
+    {% if img_loading == 'eager' %}fetchpriority="high"{% endif %}
+    class="{{ img_class }}"
+  >
+{%- endif -%}

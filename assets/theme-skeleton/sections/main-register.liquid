@@ -1,0 +1,57 @@
+{%- comment -%}
+  main-register.liquid — create customer account.
+{%- endcomment -%}
+<div class="main-register color-{{ section.settings.color_scheme }}">
+  <div class="main-register__inner page-width section">
+    <h1 class="main-register__title">{{ 'customer.register.title' | t }}</h1>
+
+    {%- form 'create_customer', class: 'main-register__form' -%}
+      {%- if form.errors -%}
+        <ul class="form__errors" role="list">
+          {%- for field in form.errors -%}
+            <li>{{ form.errors.messages[field] }}</li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+      <label for="RegisterFirstName">{{ 'customer.register.first_name' | t }}</label>
+      <input id="RegisterFirstName" type="text" name="customer[first_name]" autocomplete="given-name">
+
+      <label for="RegisterLastName">{{ 'customer.register.last_name' | t }}</label>
+      <input id="RegisterLastName" type="text" name="customer[last_name]" autocomplete="family-name">
+
+      <label for="RegisterEmail">{{ 'customer.register.email' | t }}</label>
+      <input id="RegisterEmail" type="email" name="customer[email]" autocomplete="email" required>
+
+      <label for="RegisterPassword">{{ 'customer.register.password' | t }}</label>
+      <input id="RegisterPassword" type="password" name="customer[password]" autocomplete="new-password" required>
+
+      <button type="submit" class="button">{{ 'customer.register.submit' | t }}</button>
+    {%- endform -%}
+
+    <p><a href="{{ routes.account_login_url }}">{{ 'customer.register.have_account' | t }}</a></p>
+  </div>
+</div>
+
+{%- style -%}
+  .main-register__inner { max-width: 480px; display: grid; gap: var(--space-4); }
+  .main-register__form { display: grid; gap: var(--space-3); }
+  .main-register__form input {
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid rgb(var(--color-border));
+    border-radius: var(--radius-sm);
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Register",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

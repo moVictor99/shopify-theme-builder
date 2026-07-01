@@ -1,0 +1,68 @@
+[
+  {
+    "//": "SAMPLE settings_schema.json — the design-token control panel. This is the abbreviated teaching version; the working scaffold lives at assets/theme-skeleton/config/settings_schema.json. Every token here becomes a CSS custom property in snippets/css-variables.liquid. Add settings, never hard-code values in sections."
+  },
+  {
+    "name": "theme_info",
+    "theme_name": "Your Theme Name",
+    "theme_author": "Your Studio",
+    "theme_version": "1.0.0",
+    "theme_documentation_url": "https://shopify.dev/docs/themes",
+    "theme_support_url": "https://shopify.dev/docs/themes"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "color_scheme_group",
+        "id": "color_schemes",
+        "definition": [
+          { "type": "color", "id": "background", "default": "#ffffff", "label": "Background" },
+          { "type": "color_background", "id": "background_gradient", "label": "Background gradient" },
+          { "type": "color", "id": "text", "default": "#14110f", "label": "Text" },
+          { "type": "color", "id": "primary_button", "default": "#14110f", "label": "Primary / accent" },
+          { "type": "color", "id": "on_primary_button", "default": "#ffffff", "label": "Text on primary" },
+          { "type": "color", "id": "secondary_button", "default": "#ffffff", "label": "Secondary button" },
+          { "type": "color", "id": "on_secondary_button", "default": "#14110f", "label": "Text on secondary" },
+          { "type": "color", "id": "border", "default": "#e3ded8", "label": "Border" },
+          { "type": "color", "id": "surface", "default": "#f7f4f0", "label": "Surface / card" },
+          { "type": "color", "id": "secondary", "default": "#6b6560", "label": "Secondary text" },
+          { "type": "color", "id": "accent", "default": "#8a6d3b", "label": "Accent" },
+          { "type": "color", "id": "sale", "default": "#b23b3b", "label": "Sale / price" }
+        ],
+        "role": {
+          "background": { "solid": "background", "gradient": "background_gradient" },
+          "text": "text",
+          "primary_button": "primary_button",
+          "on_primary_button": "on_primary_button",
+          "primary_button_border": "primary_button",
+          "secondary_button": "secondary_button",
+          "on_secondary_button": "on_secondary_button",
+          "secondary_button_border": "border",
+          "links": "primary_button",
+          "icons": "text",
+          "shadow": "text"
+        }
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      { "type": "font_picker", "id": "heading_font", "default": "assistant_n4", "label": "Heading font" },
+      { "type": "range", "id": "heading_scale", "min": 100, "max": 150, "step": 5, "unit": "%", "label": "Heading size scale", "default": 115 },
+      { "type": "font_picker", "id": "body_font", "default": "assistant_n4", "label": "Body font" },
+      { "type": "range", "id": "body_scale", "min": 90, "max": 130, "step": 5, "unit": "%", "label": "Base body size", "default": 100 }
+    ]
+  },
+  {
+    "name": "Layout & shape",
+    "settings": [
+      { "type": "range", "id": "page_width", "min": 1000, "max": 1600, "step": 20, "unit": "px", "label": "Page width", "default": 1300 },
+      { "type": "range", "id": "section_spacing", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "Space between sections", "default": 64 },
+      { "type": "range", "id": "grid_gap", "min": 8, "max": 48, "step": 2, "unit": "px", "label": "Grid gap", "default": 24 },
+      { "type": "range", "id": "radius_md", "min": 0, "max": 32, "step": 1, "unit": "px", "label": "Card / button radius", "default": 10 },
+      { "type": "range", "id": "shadow_opacity", "min": 0, "max": 40, "step": 2, "unit": "%", "label": "Shadow strength", "default": 12 }
+    ]
+  }
+]
