@@ -123,7 +123,7 @@ This replaces manually looping `section.blocks` when you opt a section into the 
 
 ## 3. Sections and `{% schema %}` anatomy
 
-A section is `sections/<kebab-name>.liquid`: Liquid markup, optional `{% stylesheet %}` / `{% javascript %}`, and exactly one `{% schema %}` JSON block.
+A section is `sections/<kebab-name>.liquid`: Liquid markup, optional scoped CSS in a **`{% style %}`** tag (never `{% stylesheet %}`/`{% javascript %}` — the importer can silently drop the section; see `reliability-and-sync.md` §1), any JS via an external `assets/*.js` asset, and exactly one `{% schema %}` JSON block.
 
 ```liquid
 {%- comment -%} sections/image-with-text.liquid {%- endcomment -%}
@@ -212,7 +212,7 @@ If a section has **no `presets` and no `default`**, merchants cannot add it via 
 
 ### Section-level styling from settings
 
-Pass merchant settings into your design-token layer via inline custom properties on the wrapper, e.g. `style="--section-padding-block: {{ section.settings.padding_block }}px;"`, then consume `var(--section-padding-block)` in your `{% stylesheet %}`. This keeps CSS static and cacheable while remaining merchant-driven.
+Pass merchant settings into your design-token layer via inline custom properties on the wrapper, e.g. `style="--section-padding-block: {{ section.settings.padding_block }}px;"`, then consume `var(--section-padding-block)` in your `{% style %}` block. This keeps CSS static and cacheable while remaining merchant-driven.
 
 ---
 

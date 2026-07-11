@@ -147,10 +147,12 @@ docs in [`references/`](references/).
 | `AGENTS.md` | Same workflow as a cross-agent entry point (Codex, Cursor, Gemini CLI, …) |
 | `.cursor/`, `.windsurf/` | Thin per-agent rule adapters pointing back to `SKILL.md` |
 | `install.sh` / `install.ps1` | One-command install into a Claude skills directory |
-| `references/` | Deep guides loaded on demand (standards, settings-control, OS 2.0, tokens, i18n/RTL, a11y, perf, SEO, interview, QA) |
+| `references/` | Deep guides loaded on demand (standards, **reliability-and-sync**, settings-control, OS 2.0, tokens, i18n/RTL, a11y, perf, SEO, interview, QA) |
+| `references/reliability-and-sync.md` | The import/sync landmines that pass `theme-check` but break the store (dropped sections, 404s, dead color schemes) — read this first |
 | `assets/theme-skeleton/` | Minimal valid OS 2.0 theme used as the scaffold base |
 | `examples/` | Reference-quality section + template + settings to pattern-match |
-| `scripts/validate_theme.py` | Sanity-checks JSON templates and schema validity |
+| `scripts/validate_theme.py` | Structural + **import/sync landmine** linter (`{% stylesheet %}` tags, block names > 25, invalid color roles, static layout sections, packaged cruft). Run before `shopify theme check`; read its exit code |
+| `scripts/selftest.py` | "Bomb test" — proves `validate_theme.py` catches each landmine (run to verify the guardrails) |
 
 ## License
 

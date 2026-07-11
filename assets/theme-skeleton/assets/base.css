@@ -23,6 +23,12 @@ body {
 }
 
 img, picture, svg, video { display: block; max-width: 100%; height: auto; }
+
+/* Custom elements default to display:inline, so box-model (padding/height/
+   margin) is ignored -> collapsed layout. Give every web component we define an
+   explicit display. See references/reliability-and-sync.md §7. */
+header-nav, cart-drawer { display: block; }
+
 input, button, textarea, select { font: inherit; color: inherit; }
 button { cursor: pointer; background: none; border: 0; }
 a { color: inherit; text-decoration: none; }

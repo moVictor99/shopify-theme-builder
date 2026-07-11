@@ -2,6 +2,13 @@
 
 You are building an Online Store 2.0 (OS 2.0) theme that must pass `theme-check` with **zero errors** and clear the **Shopify Theme Store** review bar. Treat everything below as non-negotiable. When in doubt, mirror **Dawn**. See also [settings-control.md](./settings-control.md) and [qa-checklist.md](./qa-checklist.md).
 
+> **`theme-check` clean is necessary but NOT sufficient.** A separate class of
+> failures passes `theme-check` yet breaks the live theme (sections silently
+> dropped on import, 404s, dead color schemes, broken add-to-cart, mobile
+> sideways-scroll). Those are covered in **[reliability-and-sync.md](./reliability-and-sync.md)**
+> and enforced by `scripts/validate_theme.py`. Read it — it is as important as
+> this file.
+
 ---
 
 ## 1. Required directory structure
@@ -137,11 +144,28 @@ Zero **errors** is mandatory. Drive warnings toward zero too.
 | `{% schema %}` hard-coded home content | `templates/index.json` sections |
 | `product.featured_image` (legacy alias) | `product.featured_media` / `.featured_image` OK but prefer media |
 | `handle` on deleted objects | current objects; avoid `shop.metafields` undocumented paths |
-| Global `{% javascript %}`/`{% stylesheet %}` in sections for large code | External `assets/*.js` / `*.css` with `asset_url` |
+| **`{% stylesheet %}` / `{% javascript %}` tags (ANY size)** — importer may silently drop the section | Scoped CSS in a **`{% style %}`** tag; JS in external `assets/*.js` via `asset_url` (see reliability-and-sync §1) |
 | `{% section 'x' %}` for header/footer | Section groups (`sections/*-group.json`) |
 | `where`/manual filtering when a filter object exists | `search`/`filters`/`storefront_filters` |
 
 Rules of thumb: `render` over `include`; `image_url` over `img_url`; JSON templates over `.liquid` templates; section groups over static sections.
+
+### 5b. Importer/sync hard rules (theme-check does NOT catch these)
+
+These are the top causes of "validated but broken." Full detail + fixes in
+[reliability-and-sync.md](./reliability-and-sync.md):
+
+- **No `{% stylesheet %}` / `{% javascript %}` tags** anywhere — the importer can
+  drop the whole section. Use `{% style %}` + external `assets/*.js`.
+- **Section block `name` ≤ 25 chars** — longer names drop the section + its
+  template (→ 404). Also keep preset/section names short.
+- **`color_scheme_group` `role`** uses only documented keys (no `shadow` etc.) —
+  one bad key kills the entire color system (→ serif fallback).
+- **Header/footer/cart drawer via section groups only** — never mix a static
+  `{% section %}` with `{% sections %}` in a layout (aborts render).
+- **Never pipe a filter inside an `image_tag` argument** (e.g. `alt: x | escape`)
+  — `LiquidHTMLSyntaxError`. Pre-compute, then pass the plain value.
+- **No invented filters** (e.g. `payment_icon_png_url`).
 
 ---
 
@@ -226,7 +250,9 @@ Do not hand off unless every box is checked:
 - [ ] All JSON templates exist incl. `customers/*`
 - [ ] `layout/theme.liquid` + `layout/password.liquid` have `content_for_header` & `content_for_layout`
 - [ ] Header/footer delivered via section groups
+- [ ] `python scripts/validate_theme.py .` → **0 errors** (import/sync landmines — §5b, reliability-and-sync.md); read the exit code, don't pipe through `tail`
 - [ ] `shopify theme check` → **0 errors** (§3)
+- [ ] No `{% stylesheet %}`/`{% javascript %}` tags; all block names ≤ 25 chars; color-scheme roles valid; no cruft (`npm-cache/`, `*.log`, `.DS_Store`) in theme root (§5b)
 - [ ] No deprecated filters/tags (§5) — `include`→`render`, `img_url`→`image_url`
 - [ ] Every `<img>` has `width`+`height`+ srcset + lazy (except LCP) (§6)
 - [ ] All `<script>` use `defer`/`type="module"`; no parser-blocking JS (§7)

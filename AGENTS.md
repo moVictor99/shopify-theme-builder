@@ -15,6 +15,10 @@ gated phases below and checkpoint with the user.
 ## Read these when the relevant phase needs them (progressive disclosure)
 
 - `SKILL.md` — the full workflow, phase gates, and token vocabulary (start here).
+- `references/reliability-and-sync.md` — **read this first.** The import/sync
+  landmines that pass `theme-check` but break the store (silently dropped
+  sections, 404s, dead color schemes, broken add-to-cart). Enforced by
+  `scripts/validate_theme.py`.
 - `references/shopify-standards.md` — official standards + Theme Store rules.
 - `references/settings-control.md` — the "100% theme-editor controllable" rulebook.
 - `references/os2-architecture.md` — JSON templates, sections, blocks, section groups.
@@ -40,6 +44,26 @@ gated phases below and checkpoint with the user.
    properties in `snippets/css-variables.liquid`) drives all color, type,
    spacing, radius, shadow, motion. Sections read `var(--token)` only.
 
+## ⚠️ Reliability first (the #1 cause of "it validated but is broken")
+
+`theme-check` passing does not mean the theme works. Obey every rule in
+`references/reliability-and-sync.md`. The high-frequency ones:
+
+1. **Never use the `{% stylesheet %}` or `{% javascript %}` tag** — the importer
+   silently drops files that use them (→ missing sections, 404s). Use the
+   **`{% style %}` tag** for scoped CSS and external `assets/*.js` for scripts.
+2. **Every section block `name` ≤ 25 characters** — longer names drop the section
+   + its template on sync (→ 404); `theme-check` won't warn.
+3. **`color_scheme_group` `role` uses only valid keys** (no `shadow`/invented) —
+   one bad key kills the whole color system (→ serif fallback).
+4. **Header/footer/cart drawer via section groups only** — never a static
+   `{% section %}` in a layout (mixing aborts the render).
+5. **`display: block` on every custom element**; `min-inline-size: 0` on grid/flex
+   children holding sliders/media (avoids ignored padding + mobile sideways scroll).
+
+Run `python scripts/validate_theme.py <theme-dir>` (read the exit code — never
+pipe through `tail`) as a hard gate in Phase 6.
+
 ## Phase gates (do not cross a gate until its exit condition is met)
 
 0. **Discovery interview (blocking)** — do not write code first. Interview the
@@ -53,8 +77,9 @@ gated phases below and checkpoint with the user.
    groups, and locales.
 3. **Build sections** — header/footer → home → product → collection/search →
    cart → content/blog → utility. Each ships complete: Liquid + `{% schema %}` +
-   token-driven scoped CSS + any web-component JS + locale keys. Pattern-match
-   `examples/section-hero.liquid`.
+   token-driven scoped CSS in a `{% style %}` tag (never `{% stylesheet %}`) +
+   any web-component JS in an external `assets/*.js` + locale keys. Keep block
+   names ≤ 25 chars. Pattern-match `examples/section-hero.liquid`.
 4. **Design pass** — enforce type scale, spacing rhythm, contrast, motion, states.
 5. **i18n & RTL pass** — every string a translation key; layouts mirror in RTL.
 6. **QA & validation** — `shopify theme check` (zero errors),

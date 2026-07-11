@@ -413,7 +413,7 @@ before any stylesheet. It emits `:root` globals and one `.color-<scheme-id>` blo
 > you get the RGB triplet. Never `| color_to_rgb` string-parse; use the numeric channels.
 
 ### Base stylesheet consumes tokens only
-In `assets/base.css` (or a `{% stylesheet %}`), you reference tokens exclusively:
+In `assets/base.css` (or a section's `{% style %}` tag — never `{% stylesheet %}`; see `reliability-and-sync.md` §1), you reference tokens exclusively:
 ```css
 body { font-family: var(--font-body-family); font-weight: var(--font-body-weight);
        font-size: var(--font-body); line-height: var(--line-body); }
@@ -460,9 +460,9 @@ class. Section padding uses the token too.
   </div>
 </div>
 
-{% stylesheet %}
+{% style %}
   .section { padding-block: var(--section-padding-block); }
-{% endstylesheet %}
+{% endstyle %}
 ```
 
 Because `.color-<scheme>` sets `--color-*` and `color`/`background-color`, every descendant that
@@ -538,8 +538,8 @@ All durations collapse to `0ms` when `animations_enabled` is off OR `prefers-red
 Run this before every commit. `theme-check` won't catch literals — you must.
 
 - [ ] `grep -rniE '#[0-9a-f]{3,8}' sections snippets` returns **nothing** (no hex outside css-variables.liquid).
-- [ ] `grep -rnE '[0-9]+px' sections snippets` returns nothing except inside `{% stylesheet %}`
-      where it references a token, and even there prefer `var(--space-*)`.
+- [ ] `grep -rnE '[0-9]+px' sections snippets` returns nothing except inside a `{% style %}`
+      block where it references a token, and even there prefer `var(--space-*)`.
 - [ ] No `font-family:` naming a literal family outside `css-variables.liquid`.
 - [ ] No `font-weight: 700` / literal weights — use `var(--font-heading-weight)` or `font_modify`.
 - [ ] Every visible section has a `color_scheme` setting and `class="color-{{ ... }}"`.

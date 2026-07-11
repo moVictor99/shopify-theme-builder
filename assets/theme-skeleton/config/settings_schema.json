@@ -100,8 +100,7 @@
           "on_secondary_button": "on_secondary_button",
           "secondary_button_border": "border",
           "links": "primary_button",
-          "icons": "text",
-          "shadow": "text"
+          "icons": "text"
         }
       }
     ]

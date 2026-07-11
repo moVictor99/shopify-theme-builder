@@ -2,11 +2,27 @@
 
 Emit this as an explicit **pass/fail** report before hand-off. Every item has a short "how to verify". Nothing ships until this is green. See [shopify-standards.md](./shopify-standards.md) and [settings-control.md](./settings-control.md).
 
-**Always run these two first:**
+**Always run these two first (read exit codes — never pipe through `tail`/`head`, it masks failures):**
+- `python scripts/validate_theme.py .` → must pass (structural + **import/sync landmine** lint).
 - `shopify theme check` → must report **0 errors** (drive warnings to 0 too).
-- `scripts/validate_theme.py` → must pass (structural + token + i18n audit).
 
 ---
+
+## 0. Reliability & sync *(theme-check does NOT catch these — see [reliability-and-sync.md](./reliability-and-sync.md))*
+
+These are the #1 cause of "it validated but the build is broken." All must pass.
+
+- [ ] **No `{% stylesheet %}` / `{% javascript %}` tags** — `grep -rnE '\{%-?\s*(stylesheet|javascript)\s*-?%\}' sections snippets` is empty. Scoped CSS uses `{% style %}`; JS is external `assets/*.js`.
+- [ ] **All section block names ≤ 25 chars** — longer names silently drop the section + its template (→ 404).
+- [ ] **Color-scheme `role` keys all valid** — no `shadow`/invented keys; the editor registers the schemes (fonts are not serif fallback).
+- [ ] **Header/footer/cart via section groups** — no static `{% section %}` in `layout/*.liquid` (`grep -rnE "\{%-?\s*section\s+'" layout` empty).
+- [ ] **No filter piped inside an `image_tag` arg** (e.g. `alt: x | escape`) — pre-computed instead.
+- [ ] **Single-variant add-to-cart works** — a 1-variant product still POSTs a variant `id`; add-to-cart and Buy-it-now succeed (no "Required parameter missing: items").
+- [ ] **Every custom element has `display: block`** in CSS — no collapsed/ignored padding on `<cart-drawer>`, recs, predictive search, etc.
+- [ ] **No mobile horizontal overflow** — sliders/galleries/embeds don't scroll the page sideways at 390px (`min-inline-size: 0` on grid/flex children; `overflow-x: clip` on scrollers).
+- [ ] **RTL positioning correct** — no `translateX`-based centering that fails to mirror; carousels use rect-based deltas.
+- [ ] **Re-render-safe third-party widgets** — SDKs injected via `createElement`, re-init on `variant:change` / section load (not a declarative `<script src>` in re-rendered HTML).
+- [ ] **No cruft in theme root** — no `npm-cache/`, `node_modules/`, `.DS_Store`, `*.log`, `.shopify/`, nested `*.zip`; root has only the standard theme dirs.
 
 ## A. Shopify compliance
 
@@ -85,6 +101,7 @@ Emit this as an explicit **pass/fail** report before hand-off. Every item has a 
 
 | Area | Pass/Fail | Notes |
 |------|-----------|-------|
+| 0. Reliability & sync (no `{% stylesheet %}`, block names ≤ 25, valid roles, no cruft) | | |
 | A. Shopify compliance | | |
 | B. Settings control (incl. "No code required by merchant", "Shopify standards compliant") | | |
 | C. OS 2.0 architecture | | |

@@ -34,6 +34,12 @@
   style="--hero-min-height: {{ min_height }}px; --hero-overlay: {{ overlay }};"
 >
   {%- if section_bg != blank -%}
+    {%- comment -%}
+      Pre-compute the alt: NEVER pipe a filter (| default, | escape, …) inside an
+      image_tag argument — Liquid applies it to the whole tag, not the arg, and
+      `| escape` there raises LiquidHTMLSyntaxError. See reliability-and-sync.md §5.
+    {%- endcomment -%}
+    {%- assign hero_alt = section_bg.alt | default: section.settings.heading | escape -%}
     <div class="hero__media media" aria-hidden="true">
       {%- comment -%} LCP image: eager + high priority, explicit dimensions. {%- endcomment -%}
       {{
@@ -46,7 +52,7 @@
           widths: '600, 800, 1000, 1200, 1600, 2000',
           width: section_bg.width,
           height: section_bg.height,
-          alt: section_bg.alt | default: section.settings.heading
+          alt: hero_alt
       }}
       <div class="hero__overlay"></div>
     </div>
@@ -85,8 +91,15 @@
   </div>
 </section>
 
-{%- comment -%} Scoped styles — tokens only, logical properties for RTL. {%- endcomment -%}
-{% stylesheet %}
+{%- comment -%}
+  Scoped styles — tokens only, logical properties for RTL.
+  Use the {% style %} tag, NEVER {% stylesheet %}: Shopify's theme importer can
+  silently drop any section that uses the {% stylesheet %} tag, taking every
+  template that referenced it down with it (→ 404s / missing sections). This
+  passes theme-check either way, so the tag choice is the reliability firewall.
+  See references/reliability-and-sync.md §1.
+{%- endcomment -%}
+{% style %}
   .hero {
     position: relative;
     display: grid;

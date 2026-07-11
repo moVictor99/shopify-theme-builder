@@ -72,12 +72,21 @@ Rules:
 
 ## 2. CSS
 
-- **Avoid render-blocking CSS.** Prefer per-section `{% stylesheet %}` blocks (Shopify bundles
-  and defers them) and scoped rules over a giant global `theme.css` in the critical path.
+- **Avoid render-blocking CSS.** Prefer per-section scoped CSS in a **`{% style %}`
+  tag** and scoped rules over a giant global `theme.css` in the critical path.
+  > ⚠️ **Do NOT use the `{% stylesheet %}` tag** (or `{% javascript %}`), even
+  > though it advertises bundling/minification: Shopify's theme **importer can
+  > silently drop any section that uses it** (→ missing sections / 404s). This is
+  > the #1 real-world theme breakage. Reliability wins over the marginal
+  > minification. Use `{% style %}` for scoped CSS; put large/shared CSS in an
+  > external `assets/*.css` loaded via the `stylesheet_tag` *filter*. See
+  > `references/reliability-and-sync.md` §1.
 - **Inline critical CSS** for above-the-fold (base tokens via `css-variables.liquid`'s
   `{% style %}`, layout skeleton) directly in `<head>`.
-- **Minimize** shipped CSS; delete dead rules. `{% stylesheet %}` blocks are minified for you.
-- **No `@import`** in CSS — it serializes downloads. Use `{% stylesheet %}`/asset tags.
+- **Minimize** shipped CSS; delete dead rules. Keep each section's `{% style %}`
+  lean; offload anything large to an external asset.
+- **No `@import`** in CSS — it serializes downloads. Use external `assets/*.css`
+  via `stylesheet_tag` / asset tags.
 - **`contain: layout` / `content-visibility: auto`** on below-the-fold sections to skip
   offscreen layout/paint:
   ```css
@@ -189,7 +198,7 @@ Rules:
 
 **CSS**
 - [ ] Critical CSS inline; no render-blocking global stylesheet; no `@import`.
-- [ ] Per-section `{% stylesheet %}`; `content-visibility`/`contain` on deferred sections.
+- [ ] Per-section scoped CSS in a `{% style %}` tag (NEVER `{% stylesheet %}` — importer drops it); `content-visibility`/`contain` on deferred sections.
 - [ ] References tokens only; dead CSS removed.
 
 **JS**

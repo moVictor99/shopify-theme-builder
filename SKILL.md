@@ -57,6 +57,36 @@ WCAG 2.1 AA (`references/accessibility.md`), i18n + RTL
 (`references/i18n-rtl.md`), SEO + structured data
 (`references/seo-structured-data.md`).
 
+---
+
+## ⚠️ Reliability first — the landmines that pass `theme-check` but break the store
+
+`theme-check` passing does **not** mean the theme works. The most common cause of
+"it validated but the implementation is bad / product pages 404 / sections
+vanished / colors don't apply" is a handful of Shopify **import & sync landmines**
+that `theme-check` never flags. **Read `references/reliability-and-sync.md` and
+obey every rule** — they are non-negotiable and are enforced by
+`scripts/validate_theme.py`. The highest-frequency ones:
+
+1. **Never use the `{% stylesheet %}` or `{% javascript %}` tag** in a section or
+   snippet — the importer silently drops files that use them, taking every
+   template that referenced them down (→ 404s, missing sections). Use the
+   **`{% style %}` tag** for scoped CSS and external `assets/*.js` for scripts.
+   (The `stylesheet_tag` *filter* is fine — only the *tags* are the hazard.)
+2. **Every section block `name` is ≤ 25 characters** — longer names are rejected
+   on sync and drop the section + its template (→ 404). `theme-check` won't warn.
+3. **`color_scheme_group` `role` uses only valid role keys** — one bad key (e.g.
+   `shadow`) invalidates the whole color system (→ serif fallback, "schemes must
+   be defined"). Copy Dawn's `role` object.
+4. **Deliver header/footer/cart drawer via section groups**, never a static
+   `{% section %}` in the layout (mixing the two aborts the layout render).
+5. **Set `display: block` on every custom element**, and `min-inline-size: 0` on
+   grid/flex children holding sliders/media (prevents ignored padding + mobile
+   sideways-scroll overflow).
+
+Run `python scripts/validate_theme.py .` (reads the exit code — never pipe it
+through `tail`) as a hard gate in Phase 6, before `shopify theme check`.
+
 **Progressive disclosure:** keep this file in context; open a reference only
 when its phase needs it. Don't preload all of `references/`.
 
@@ -100,9 +130,13 @@ Copy `assets/theme-skeleton/` as the base. Wire `settings_schema.json` (tokens),
 Order: header/footer group → homepage sections → product → collection/search →
 cart/drawer → content/blog → utility templates (search, 404, password,
 customer/account). Each section ships **complete**: Liquid + `{% schema %}` +
-scoped styles (token-driven) + any JS (web-component pattern) + locale keys.
-Pattern-match every section against `examples/section-hero.liquid`.
-**Exit:** all in-scope sections built and self-consistent.
+scoped styles in a **`{% style %}` tag** (token-driven, never `{% stylesheet %}`)
++ any JS in an external `assets/*.js` (web-component pattern) + locale keys.
+Pattern-match every section against `examples/section-hero.liquid`. Keep every
+block `name` ≤ 25 chars. Before moving on, run
+`python scripts/validate_theme.py .` on the growing theme to catch dropped-file
+landmines early (see `references/reliability-and-sync.md`).
+**Exit:** all in-scope sections built and self-consistent; validator clean.
 
 ### Phase 4 — Design-system pass
 Apply `ui-ux-pro-max`: enforce type scale, spacing rhythm, contrast, motion, and
@@ -121,15 +155,28 @@ template and schema, and audit Theme-Store-level compliance. Explicitly walk
 every section and confirm **no hard-coded copy, color, or image** remains — a
 merchant could reproduce the intended design from the customizer alone. Check
 a11y (keyboard, contrast, ARIA) and performance (image `srcset`, script defer,
-CLS). Emit the checklist from `references/qa-checklist.md`, which must include
-the line items **"No code required by merchant"** and **"Shopify standards
-compliant."** `scripts/validate_theme.py` sanity-checks JSON/schemas.
-**Exit:** checklist all-pass.
+CLS). **Run `python scripts/validate_theme.py .` first (read its exit code — do
+not pipe through `tail`); it must pass with zero errors** — it lints for the
+import/sync landmines (`{% stylesheet %}`/`{% javascript %}` tags, block names
+> 25 chars, invalid color-scheme roles, static `{% section %}` in layouts,
+packaged cruft) that `theme-check` misses. Then run `shopify theme check`
+(**0 errors**). Emit the checklist from `references/qa-checklist.md`, which must
+include the line items **"No code required by merchant"**, **"Shopify standards
+compliant,"** and the **Reliability & sync** block. Verify the runtime landmines
+live (single-variant add-to-cart, custom-element spacing, RTL mirroring, mobile
+horizontal overflow) per `references/reliability-and-sync.md`.
+**Exit:** checklist all-pass; both validators green.
 
 ### Phase 7 — Package & hand off
-Confirm the theme zips clean (correct root layout, no stray files), then write
-`THEME_NOTES.md` (tokens, section inventory, how-to-customize) into the theme
-and give the user setup + upload notes.
+Confirm the theme zips clean: the root contains ONLY `assets/ config/ layout/
+locales/ sections/ snippets/ templates/` (plus optional `blocks/`) — **delete any
+`npm-cache/`, `node_modules/`, `.DS_Store`, `*.log`, `.shopify/`, or nested
+`*.zip` first** (see `references/reliability-and-sync.md` §14), and zip with
+forward slashes. Then write `THEME_NOTES.md` (tokens, section inventory,
+how-to-customize) into the theme and give the user setup + upload notes. If a
+synced file mysteriously fails to appear in the store, use the verify-it-landed
+method in `references/reliability-and-sync.md` §15 — don't trust "validation is
+green" alone.
 **Exit:** zip-ready theme + notes delivered.
 
 ---
@@ -140,6 +187,14 @@ Follow Dawn's **color-scheme groups** for color, layered with a systematic
 scale for the rest. Sections expose a `color_scheme` setting; global tokens live
 in `settings_schema.json` and are emitted as CSS custom properties in
 `snippets/css-variables.liquid` (loaded from `layout/theme.liquid`).
+
+> **Color-scheme `role` keys are strict.** Use ONLY the documented roles
+> (`background`, `text`, `primary_button`, `on_primary_button`,
+> `primary_button_border`, `secondary_button`, `on_secondary_button`,
+> `secondary_button_border`, `links`, `icons`). A single unknown key (e.g.
+> `shadow`) silently invalidates the *entire* color system → serif-font fallback
+> and a "color schemes must be defined" editor error. Copy Dawn's `role` object.
+> See `references/reliability-and-sync.md` §3.
 
 - **Color** (per scheme, RGB-triplet vars, Dawn-style):
   `--color-background`, `--color-foreground`, `--color-surface`,
@@ -167,10 +222,14 @@ in `references/design-tokens.md`.
   `templates/<type>.json` and named variants `templates/<type>.<name>.json`.
 - **CSS:** one `assets/base.css` for tokens/reset/utilities; per-section styles
   scoped via a unique section wrapper class or `{{ section.id }}`, injected with
-  a `{% stylesheet %}` tag or a scoped `<style>` — no global bleed, no `!important`.
-- **JS:** vanilla only, `type="module"`, custom-elements / web-components for
-  interactivity, event delegation, no globals, progressive enhancement (works
-  without JS where possible). No jQuery.
+  the **`{% style %}` tag** (never `{% stylesheet %}` — the importer drops it; see
+  `references/reliability-and-sync.md` §1) — no global bleed, no `!important`.
+  Anything large/shared goes in an external `assets/*.css` via `stylesheet_tag`.
+- **JS:** vanilla only, in external `assets/*.js` files loaded with
+  `<script src defer>` (never the `{% javascript %}` tag). `type="module"`,
+  custom-elements / web-components for interactivity (each given an explicit
+  `display: block` in CSS), event delegation, no globals, progressive enhancement
+  (works without JS where possible). No jQuery.
 - **Liquid:** DRY — anything used twice becomes a snippet. Responsive images via
   `image_url` + `srcset` + `width`/`height` + `loading="lazy"`. Never a
   deprecated object/filter/tag.

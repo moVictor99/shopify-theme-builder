@@ -27,16 +27,14 @@
         <strong>{{ gift_card.balance | money }}</strong>
       </p>
 
-      {%- if gift_card.qr_identifier != blank -%}
-        <div class="gift-card__qr">
-          <img
-            src="{{ gift_card.qr_identifier | payment_icon_png_url }}"
-            alt="{{ 'gift_cards.issued.qr_alt' | t }}"
-            width="120"
-            height="120"
-          >
-        </div>
-      {%- endif -%}
+      {%- comment -%}
+        Shopify has NO server-side filter that turns gift_card.qr_identifier into a
+        QR image — `payment_icon_png_url` (a common copy-paste) is not a real filter
+        and fails theme-check (reliability-and-sync.md §12). To show a scannable QR,
+        bundle a QR library in assets/ and render it client-side from
+        `gift_card.qr_identifier` (see Dawn's gift_card.liquid). The printed code
+        below is the reliable, dependency-free redemption path.
+      {%- endcomment -%}
 
       <p class="gift-card__code">
         {{ 'gift_cards.issued.code' | t }}:
